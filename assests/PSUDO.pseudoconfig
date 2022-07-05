@@ -1,0 +1,80 @@
+#Think of an while loop to keep it all open#
+
+BEGIN Start
+
+    Show Start screen
+    IF Login pressed
+        CALL Login
+    IF Register pressed
+        CALL Register
+    IF Exit pressed
+        CALL Exit
+
+END Start
+    
+BEGIN Login
+
+    Show Login screen
+    IF Enter pressed THEN
+        
+        IF username and password = '' THEN 
+            
+            Display 'Nothing Entered'
+        
+        ElSE
+            
+            IF username not in DB THEN
+                Display "wrong username"
+            ENDIF
+            
+            IF password not in DB THEN
+                Display "wrong password"
+            ENDIF
+
+            IF username and password in DB THEN
+                CALL Wordle
+            ENDIF
+
+    IF Back pressed
+        CALL Start
+    IF Exit pressed
+        CALL Exit
+    
+END Login
+
+BEGIN Register
+
+    show Register screen
+    IF Enter pressed
+        IF username and password != '' and username and password are not in DB
+            Add username and password to DB
+            CALL Login
+        IF username is in DB
+            Display "Username already in DB"
+    IF Back pressed
+        CALL Start
+    IF Exit pressed
+        CALL Exit
+
+END Register
+
+BEGIN Wordle
+
+    WHILE Gameover is not True
+        
+        IF Enter pressed
+            IF Letters Fill 
+
+    ENDWHILE
+
+END Wordle
+
+BEGIN Exit
+
+    Close Program
+
+END Exit
+
+
+
+
