@@ -59,18 +59,22 @@ class Wordle:
         running = True
         while running:
 
-            font = pygame.font.SysFont(None,50)
+            font = pygame.font.SysFont(None,30)
             mx,my = pygame.mouse.get_pos()
             
             screen.fill((50,50,50))
             self.draw_text('Wordle',font,(255,255,255),screen,250,40)
             
             login_button = self.draw_button(250,100,100,50,screen,(255,0,0),'Login',font,(255,255,255))
+            register_button = self.draw_button(250,300,100,50,screen,(255,0,0),'Register',font,(255,255,255))
             
             #Button 1 collision 
             if login_button.collidepoint((mx,my)):
                 if click:
                     self.login_screen(screen)
+            if register_button.collidepoint((mx,my)):
+                if click:
+                    self.registor_screen(screen)
 
             #Events
             click = False
@@ -97,9 +101,9 @@ class Wordle:
             self.draw_text('Login',font,(255,255,255),screen,20,20)
             
             
-            back_button = self.draw_button(250,300,100,50,screen,(255,0,0),'Back',font,(255,255,255))
+            back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',font,(255,255,255))
         
-            #Button 1 collision 
+            #Back button 1 collision 
 
             if back_button.collidepoint((mx,my)):
                 if click:
@@ -117,8 +121,36 @@ class Wordle:
             pygame.display.update()
             mainClock.tick(60)
 
-    def registor_screen(self):
-        pass
+    def registor_screen(self,screen):
+        running = True
+        while running:
+
+            font = pygame.font.SysFont(None,50)
+            mx,my = pygame.mouse.get_pos()
+
+            screen.fill((0,0,0))
+            self.draw_text('Register',font,(255,255,255),screen,20,20)
+            
+            
+            back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',font,(255,255,255))
+        
+            #Button 1 collision 
+            
+            if back_button.collidepoint((mx,my)):
+                if click:
+                    running = False
+            
+            #Events
+            click = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+            
+            pygame.display.update()
+            mainClock.tick(60)
     
     def exit_screen(self):
         pygame.quit()
