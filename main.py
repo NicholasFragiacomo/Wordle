@@ -1,9 +1,10 @@
+from tkinter import font
 import pygame
 import sys
 import random
 from player import Player
 import words
-
+from pygame.locals import *
 
 
 class Wordle:
@@ -14,7 +15,7 @@ class Wordle:
         self.backgroundColor = (50,50,50)
         self.width = 633 
         self.height = 900
-        #self.mx,self.my = pygame.mouse.get_pos()
+
 
     '''
     Functions
@@ -26,16 +27,16 @@ class Wordle:
         pygame.display.set_caption(caption)
         screen.fill(self.backgroundColor)
         pygame.display.flip()
-        mainClock = pygame.time.Clock()
         pygame.display.update()
         mainClock.tick(60)
         return screen
             
             
     #draws button - does not handle collision
-    def draw_button(self,left,top,width,height,screen,color):
+    def draw_button(self,left,top,width,height,screen,button_color,text,font,text_color):
         button = pygame.Rect(left,top,width,height)
-        pygame.draw.rect(screen,(color), button)
+        pygame.draw.rect(screen,(button_color), button)
+        self.draw_text(text,font,text_color,screen,left,top)
         return button
 
     def draw_text(self,text,font,color,surface,x,y):
@@ -52,29 +53,69 @@ class Wordle:
 
 
     def start_screen(self):
-        screen = self.draw_screen('start screen')
-        
-        
+    
+        screen = self.draw_screen('Wordle')
+         
         running = True
         while running:
-            
+
+            font = pygame.font.SysFont(None,50)
             mx,my = pygame.mouse.get_pos()
             
-            button_1 = self.draw_button(100,100,100,200,screen,(255,0,0))
-            font = pygame.font.SysFont(None,20)
-            self.draw_text('yo',font,(255,255,255),screen,20,20)
+            screen.fill((50,50,50))
+            self.draw_text('Wordle',font,(255,255,255),screen,250,40)
+            
+            login_button = self.draw_button(250,100,100,50,screen,(255,0,0),'Login',font,(255,255,255))
+            
+            #Button 1 collision 
+            if login_button.collidepoint((mx,my)):
+                if click:
+                    self.login_screen(screen)
 
             #Events
+            click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                if button_1.collidepoint((mx,my)):
-                    running = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+                
+            
+            pygame.display.update()
+            mainClock.tick(60)
                 
 
+    def login_screen(self,screen):
+        running = True
+        while running:
 
-    def login_screen(self):
-        pass
+            font = pygame.font.SysFont(None,50)
+            mx,my = pygame.mouse.get_pos()
+
+            screen.fill((0,0,0))
+            self.draw_text('Login',font,(255,255,255),screen,20,20)
+            
+            
+            back_button = self.draw_button(250,300,100,50,screen,(255,0,0),'Back',font,(255,255,255))
+        
+            #Button 1 collision 
+
+            if back_button.collidepoint((mx,my)):
+                if click:
+                    running = False
+            
+            #Events
+            click = False
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        click = True
+            
+            pygame.display.update()
+            mainClock.tick(60)
 
     def registor_screen(self):
         pass
@@ -88,8 +129,13 @@ def main():
     W = Wordle()
     pygame.init()
     
+
+
+    global mainClock
+    mainClock = pygame.time.Clock()
+
     W.start_screen()
-    #open()
+
 
 if __name__ == "__main__":
     main()
