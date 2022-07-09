@@ -33,9 +33,9 @@ class Wordle:
             
             
     #draws button - does not handle collision
-    def draw_button(self,left,top,width,height,screen,button_color,text,font,text_color):
+    def draw_button(self,left,top,width,height,screen,button_color,text,font,text_color,outline=0):
         button = pygame.Rect(left,top,width,height)
-        pygame.draw.rect(screen,(button_color), button)
+        pygame.draw.rect(screen,(button_color), button,outline)
         self.draw_text(text,font,text_color,screen,left,top)
         return button
 
@@ -44,7 +44,17 @@ class Wordle:
         textrect = textobj.get_rect()
         textrect.topleft = (x,y)
         surface.blit(textobj,textrect)
-        
+
+    def draw_inputBox(self,left,top,width,height,screen,inputBox_color,text,font,text_color,outline=0):
+        textobj = font.render(text,1,text_color)
+        width = max(100,textobj.get_width()+10)
+        inputBox = pygame.Rect(left,top,width,height)
+        pygame.draw.rect(screen,(inputBox_color), inputBox,outline)
+        #self.draw_text(text,font,text_color,screen,left+5,top+5)
+        textrect = textobj.get_rect()
+        textrect.topleft = (left+5,top+5)
+        screen.blit(textobj,textrect)
+        return inputBox
             
 
     ''' 
@@ -91,33 +101,56 @@ class Wordle:
                 
 
     def login_screen(self,screen):
+        user_input = ''
+        click = False
         running = True
         while running:
 
             font = pygame.font.SysFont(None,50)
             mx,my = pygame.mouse.get_pos()
 
-            screen.fill((0,0,0))
+            screen.fill((50,50,50))
             self.draw_text('Login',font,(255,255,255),screen,20,20)
             
             
             back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',font,(255,255,255))
         
+            name_box = self.draw_inputBox(250,400,100,50,screen,(255,255,255),user_input,pygame.font.SysFont(None,20),(255,255,255),2)
+            password_box = self.draw_inputBox(250,600,100,50,screen,(255,255,255),user_input,pygame.font.SysFont(None,20),(255,255,255),2)
             #Back button 1 collision 
 
-            if back_button.collidepoint((mx,my)):
-                if click:
-                    running = False
+            # if back_button.collidepoint((mx,my)):  #handle colision within the button code
+            #     if click:
+            #         running = False
+
+
+
             
             #Events
-            click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
                 if event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
-            
+                if event.type == MOUSEBUTTONDOWN:
+                    if name_box.collidepoint(event.pos):
+                        click = True
+                    else:
+                        click = False
+                if event.type == MOUSEBUTTONDOWN:
+                    if back_button.collidepoint((mx,my)):  #handle colision within the button code
+                            running = False
+                if event.type == pygame.KEYDOWN:
+                    if click == True:
+                        if event.key == pygame.K_BACKSPACE:
+                            user_input = user_input[:-1]
+                        else:
+                            user_input += event.unicode
+                        
+           
+
+
             pygame.display.update()
             mainClock.tick(60)
 
