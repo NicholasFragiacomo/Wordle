@@ -5,6 +5,7 @@ import random
 from player import Player
 import words
 from pygame.locals import *
+import json
 
 
 class Wordle:
@@ -16,6 +17,7 @@ class Wordle:
         self.height = 900
         self.backgroundColor = (50,50,50)
         self.textColor = (255,255,255)
+        self.DB = "DB.jsons"
 
 
     '''
@@ -53,8 +55,37 @@ class Wordle:
         textrect.topleft = (x+5,y+5)
         screen.blit(textobj,textrect)
         return inputBox
-            
 
+    def check_login(self,username,password):
+        
+        if username  == '':
+            print("ERROR: you forgot username \n")
+        if password == '':
+            print('ERROR: You forgot password\n')
+        if username and password != '':
+            if username in self.DB[0][0]:
+                if password in self.DB[username]:
+                    print("welrsomec")
+                    #Takes player to wordle screen
+                else:
+                    print('password dont match what we got')
+            else:
+                print('That username aint real')
+
+    def check_registor(self,username,password):
+
+        if username  == '':
+            print("ERROR: you forgot username \n")
+        if password == '':
+            print('ERROR: You forgot password\n')
+        if username and password != '':
+            if username not in DB:
+                    print("welrsomec")
+                    DB[username] = [password,0,0,0]
+                    #Takes player to Strart screen
+            else:
+                print('Username taken')
+            
     ''' 
     Screens
     '''
@@ -118,8 +149,10 @@ class Wordle:
             self.draw_text("Username:",text_font, self.textColor,screen,250,300)
             name_box = self.draw_inputBox(250,330,100,25,screen,(255,255,255),username,input_font,self.textColor,2)
 
-            self.draw_text("Password:",text_font, self.textColor,screen,250,600)
-            password_box = self.draw_inputBox(250,630,100,25,screen,(255,255,255),password,input_font,self.textColor,2)
+            self.draw_text("Password:",text_font, self.textColor,screen,250,400)
+            password_box = self.draw_inputBox(250,430,100,25,screen,(255,255,255),password,input_font,self.textColor,2)
+
+            enter_button = self.draw_button(250,700,100,50,screen,(255,0,0),'Enter',text_font,self.textColor)
 
             back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',text_font,self.textColor)
             
@@ -140,6 +173,8 @@ class Wordle:
                         click2 = False
                     if back_button.collidepoint((mx,my)): 
                         running = False
+                    if enter_button.collidepoint((mx,my)):
+                        self.check_login(username,password)
 
                 if event.type == pygame.KEYDOWN:
                     if click1 == True:
@@ -152,7 +187,8 @@ class Wordle:
                             password = password[:-1]
                         else:
                             password += event.unicode
-                        
+                    if event.key == pygame.K_RETURN:
+                        self.check_login(username,password)
            
 
 
@@ -160,35 +196,74 @@ class Wordle:
             mainClock.tick(60)
 
     def registor_screen(self,screen):
+        username = ''
+        password = ''
+        click1 = False
+        click2 = False
         running = True
         while running:
 
-            font = pygame.font.SysFont(None,50)
+            header_font = pygame.font.SysFont(None,50)
+            text_font = pygame.font.SysFont(None,30)
+            input_font = pygame.font.SysFont(None,20)
             mx,my = pygame.mouse.get_pos()
 
-            screen.fill((0,0,0))
-            self.draw_text('Register',font,(255,255,255),screen,20,20)
+            screen.fill(self.backgroundColor)
+            self.draw_text('Register',header_font,self.textColor,screen,20,20)
             
             
-            back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',font,(255,255,255))
-        
-            #Button 1 collision 
-            
-            if back_button.collidepoint((mx,my)):
-                if click:
-                    running = False
+            self.draw_text("Username:",text_font, self.textColor,screen,250,300)
+            name_box = self.draw_inputBox(250,330,100,25,screen,(255,255,255),username,input_font,self.textColor,2)
+
+            self.draw_text("Password:",text_font, self.textColor,screen,250,400)
+            password_box = self.draw_inputBox(250,430,100,25,screen,(255,255,255),password,input_font,self.textColor,2)
+
+            enter_button = self.draw_button(250,700,100,50,screen,(255,0,0),'Enter',text_font,self.textColor)
+
+            back_button = self.draw_button(250,800,100,50,screen,(255,0,0),'Back',text_font,self.textColor)
             
             #Events
-            click = False
             for event in pygame.event.get():
+                
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.exit_screen()             
+                
                 if event.type == MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        click = True
-            
+                    if name_box.collidepoint(event.pos):
+                        click1 = True
+                    else:
+                        click1 = False
+                    if password_box.collidepoint(event.pos):
+                        click2 = True
+                    else:
+                        click2 = False
+                    if back_button.collidepoint((mx,my)): 
+                        running = False
+                    if enter_button.collidepoint((mx,my)):
+                        self.check_registor(username,password)
+
+                if event.type == pygame.KEYDOWN:
+                    if click1 == True:
+                        if event.key == pygame.K_BACKSPACE:
+                            username = username[:-1]
+                        else:
+                            username += event.unicode
+                    if click2 == True:
+                        if event.key == pygame.K_BACKSPACE:
+                            password = password[:-1]
+                        else:
+                            password += event.unicode
+                    if event.key == pygame.K_RETURN:
+                        self.check_registor(username,password)
+                        
+           
+
+
             pygame.display.update()
             mainClock.tick(60)
+
+        def wordle_screen(self):
+            pass
     
     def exit_screen(self):
         pygame.quit()
