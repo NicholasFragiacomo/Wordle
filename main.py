@@ -23,8 +23,8 @@ class Wordle:
     Functions
     '''
 
-    def draw_screen(self, caption):
-        screen = pygame.display.set_mode((self.width, self.height))
+    def draw_screen(self, caption,width,height):
+        screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption(caption)
         screen.fill(self.backgroundColor)
         pygame.display.flip()
@@ -63,20 +63,20 @@ class Wordle:
             DB.close()
 
         if username == '':
-            print("ERROR: you forgot username \n")
+            return 'ERROR: you forgot username'
         if password == '':
-            print('ERROR: You forgot password\n')
+            return 'ERROR: You forgot passowrd '
         if username and password != '':
             if username in self.DB:
                 if password == self.DB[username]['password']:
-                    print("welrsomec")
-                    # Takes player to wordle screen
+                    self.start_screen()
+                    # Start the wordle  
                 else:
-                    print('password dont match what we got')
+                    return 'password dont match what we got'
             else:
-                print('That username aint real')
+                return 'That username aint real'
 
-    def check_registor(self, username, password):
+    def check_registor(self, username, password,screen):
 
         with open("DB.json") as DB:
             data = DB.read()
@@ -84,20 +84,18 @@ class Wordle:
             DB.close()
 
         if username == '':
-            print("ERROR: you forgot username \n")
+            return 'ERROR: you forgot username'
         if password == '':
-            print('ERROR: You forgot password\n')
+            return 'ERROR: You forgot password'
         if username and password != '':
             if username not in self.DB:
-                print("welrsomec")
                 self.DB[username] = {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
-                print(self.DB)
                 with open("DB.json", 'w') as data:
                     json.dump(self.DB, data)
                     data.close()
-                # Takes player to Strart screen
+                    self.login_screen(screen)
             else:
-                print('Username taken')
+                return 'Username taken'
 
     ''' 
     Screens
@@ -105,7 +103,7 @@ class Wordle:
 
     def start_screen(self):
 
-        screen = self.draw_screen('Wordle')
+        screen = self.draw_screen('Wordle',self.width,self.height)
 
         running = True
         while running:
@@ -142,6 +140,7 @@ class Wordle:
     def login_screen(self, screen):
         username = ''
         password = ''
+        error_message = ''
         click1 = False
         click2 = False
         running = True
@@ -155,6 +154,8 @@ class Wordle:
             screen.fill(self.backgroundColor)
             self.draw_text('Login', header_font,self.textColor, screen, 20, 20)
 
+            self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+
             self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
             name_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
 
@@ -183,21 +184,27 @@ class Wordle:
                     if back_button.collidepoint((mx, my)):
                         running = False
                     if enter_button.collidepoint((mx, my)):
-                        self.check_login(username, password)
+                        error_message = ''
+                        error_message  = self.check_login(username, password)
 
                 if event.type == pygame.KEYDOWN:
                     if click1 == True:
                         if event.key == pygame.K_BACKSPACE:
                             username = username[:-1]
+                        elif event.key == pygame.K_RETURN:
+                            username = username  
                         else:
                             username += event.unicode
                     if click2 == True:
                         if event.key == pygame.K_BACKSPACE:
                             password = password[:-1]
+                        elif event.key == pygame.K_RETURN:
+                            password = password
                         else:
                             password += event.unicode
                     if event.key == pygame.K_RETURN:
-                        self.check_login(username, password)
+                        error_message = ''
+                        error_message = self.check_login(username, password)
 
             pygame.display.update()
             mainClock.tick(60)
@@ -205,6 +212,7 @@ class Wordle:
     def registor_screen(self, screen):
         username = ''
         password = ''
+        error_message = ''
         click1 = False
         click2 = False
         running = True
@@ -218,6 +226,8 @@ class Wordle:
             screen.fill(self.backgroundColor)
             self.draw_text('Register', header_font,self.textColor, screen, 20, 20)
 
+            self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+
             self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
             name_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
 
@@ -246,21 +256,27 @@ class Wordle:
                     if back_button.collidepoint((mx, my)):
                         running = False
                     if enter_button.collidepoint((mx, my)):
-                        self.check_registor(username, password)
+                        error_message = ''
+                        error_message = self.check_registor(username, password,screen)
 
                 if event.type == pygame.KEYDOWN:
                     if click1 == True:
                         if event.key == pygame.K_BACKSPACE:
                             username = username[:-1]
+                        elif event.key == pygame.K_RETURN:
+                            username = username  
                         else:
                             username += event.unicode
                     if click2 == True:
                         if event.key == pygame.K_BACKSPACE:
                             password = password[:-1]
+                        elif event.key == pygame.K_RETURN:
+                            password = password
                         else:
                             password += event.unicode
                     if event.key == pygame.K_RETURN:
-                        self.check_registor(username, password)
+                        error_message = ''
+                        error_message = self.check_registor(username, password,screen)
 
             pygame.display.update()
             mainClock.tick(60)

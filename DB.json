@@ -4,11 +4,5 @@
         "numGames": 0,
         "PercWin": 0,
         "GuessDist": 0
-    },
-    "nick": {
-        "password": "password",
-        "numGames": 0,
-        "PercWin": 0,
-        "GuessDist": 0
     }
 }
