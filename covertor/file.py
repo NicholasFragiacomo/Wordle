@@ -55,9 +55,6 @@ class Wordle:
         screen.blit(textobj, textrect)
         return inputBox
 
-    def draw_keyboard(self,screen,button_color,text_color,font):
-        A = self.draw_button(100,200,20,20,screen,button_color,'A',font,text_color)
-
     def check_login(self, username, password,screen):
 
         with open("DB.json") as DB:
@@ -284,75 +281,73 @@ class Wordle:
             pygame.display.update()
             mainClock.tick(60)
 
-    def wordle_screen(self,screen):
-        username = ''
-        password = ''
-        error_message = ''
-        click1 = False
-        click2 = False
-        running = True
-        while running:
+        def wordle_screen(self):
+            username = ''
+            password = ''
+            error_message = ''
+            click1 = False
+            click2 = False
+            running = True
+            while running:
 
-            header_font = pygame.font.SysFont(None, 50)
-            text_font = pygame.font.SysFont(None, 30)
-            input_font = pygame.font.SysFont(None, 20)
-            mx, my = pygame.mouse.get_pos()
+                header_font = pygame.font.SysFont(None, 50)
+                text_font = pygame.font.SysFont(None, 30)
+                input_font = pygame.font.SysFont(None, 20)
+                mx, my = pygame.mouse.get_pos()
 
-            screen.fill(self.backgroundColor)
-            self.draw_text('Wordle', header_font,self.textColor, screen, 20, 20)
+                screen.fill(self.backgroundColor)
+                self.draw_text('Wordle', header_font,self.textColor, screen, 20, 20)
 
-            self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+                self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
 
-            self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
-            guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
+                self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
+                guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
 
-            self.draw_keyboard(screen, (255,0,0), self.textColor,input_font)
+                
+                enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
 
-            
-            enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
+                back_button = self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
 
-            back_button = self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
+                # Events
+                for event in pygame.event.get():
 
-            # Events
-            for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.exit_screen()
 
-                if event.type == pygame.QUIT:
-                    self.exit_screen()
-
-                if event.type == MOUSEBUTTONDOWN:
-                    if guess_box.collidepoint(event.pos):
-                        click1 = True
-                    else:
-                        click1 = False
-                    if back_button.collidepoint((mx, my)):
-                        running = False
-                    if enter_button.collidepoint((mx, my)):
-                        error_message = ''
-                        #check guess
-                        #error_message  = self.check_login(username, password,screen)
-
-                if event.type == pygame.KEYDOWN:
-                    if click1 == True:
-                        if event.key == pygame.K_BACKSPACE:
-                            username = username[:-1]
-                        elif event.key == pygame.K_RETURN:
-                            username = username  
+                    if event.type == MOUSEBUTTONDOWN:
+                        if guess_box.collidepoint(event.pos):
+                            click1 = True
                         else:
-                            username += event.unicode
-                    if click2 == True:
-                        if event.key == pygame.K_BACKSPACE:
-                            password = password[:-1]
-                        elif event.key == pygame.K_RETURN:
-                            password = password
-                        else:
-                            password += event.unicode
-                    if event.key == pygame.K_RETURN:
-                        error_message = ''
-                        #check guess
-                        #error_message = self.check_login(username, password,screen)
+                            click1 = False
+                        if back_button.collidepoint((mx, my)):
+                            running = False
+                        if enter_button.collidepoint((mx, my)):
+                            error_message = ''
+                            #check guess
+                            #error_message  = self.check_login(username, password,screen)
 
-            pygame.display.update()
-            mainClock.tick(60)
+                    if event.type == pygame.KEYDOWN:
+                        if click1 == True:
+                            if event.key == pygame.K_BACKSPACE:
+                                username = username[:-1]
+                            elif event.key == pygame.K_RETURN:
+                                username = username  
+                            else:
+                                username += event.unicode
+                        if click2 == True:
+                            if event.key == pygame.K_BACKSPACE:
+                                password = password[:-1]
+                            elif event.key == pygame.K_RETURN:
+                                password = password
+                            else:
+                                password += event.unicode
+                        if event.key == pygame.K_RETURN:
+                            error_message = ''
+                            #check guess
+                            #error_message = self.check_login(username, password,screen)
+
+                pygame.display.update()
+                mainClock.tick(60)
 
     def exit_screen(self):
         pygame.quit()
