@@ -18,6 +18,7 @@ class Wordle:
         self.backgroundColor = (50, 50, 50)
         self.textColor = (255, 255, 255)
         self.DB = "DB.jsons"
+        self.Alp = ['Q','W','E','R','T','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
 
     '''
     Functions
@@ -55,8 +56,28 @@ class Wordle:
         screen.blit(textobj, textrect)
         return inputBox
 
-    def draw_keyboard(self,screen,button_color,text_color,font):
-        A = self.draw_button(100,200,20,20,screen,button_color,'A',font,text_color)
+    def draw_keyboard(self,x,y,screen,button_color,text_color,font):
+        runs = 0
+        dx = x
+        lines = 0
+        for letter in self.Alp:
+
+            # changes the line line of the keyboard 
+            if runs > 8:
+                x = dx
+                y = y + 25
+                lines += 1
+                runs = 0
+            # ensures the last line of the keyboard is even
+            if lines == 2:
+                x += 25
+                lines = 0 
+            
+            letter = self.draw_button(x,y,20,20,screen,button_color,letter,font,text_color)
+            runs += 1 
+            x += 25
+
+        
 
     def check_login(self, username, password,screen):
 
@@ -306,7 +327,7 @@ class Wordle:
             self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
             guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
 
-            self.draw_keyboard(screen, (255,0,0), self.textColor,input_font)
+            self.draw_keyboard(200,400,screen, (255,0,0), self.textColor,input_font)
 
             
             enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
