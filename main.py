@@ -56,6 +56,20 @@ class Wordle:
         screen.blit(textobj, textrect)
         return inputBox
 
+    def draw_guessBox(self, x, y, width, height, screen, inputBox_color, text, font, text_color, outline=2):
+        textobj = font.render(text, 1, text_color)
+        #width = max(100, textobj.get_width()+10)
+        num = 5 
+        while num != 0:
+            x += 55
+            inputBox = pygame.Rect(x, y, width, height)
+            pygame.draw.rect(screen, (inputBox_color), inputBox, outline)
+            num -= 1
+        textrect = textobj.get_rect()
+        textrect.topleft = (x-200+5, y+5)
+        screen.blit(textobj, textrect)
+        return inputBox
+
     def draw_keyboard(self,x,y,screen,button_color,text_color,font):
         runs = 0
         dx = x
@@ -138,6 +152,7 @@ class Wordle:
             screen.fill(self.backgroundColor)
             self.draw_text('Wordle', font, self.textColor, screen, 250, 40)
 
+
             login_button = self.draw_button(250, 100, 100, 50, screen, (255, 0, 0), 'Login', font, self.textColor)
             register_button = self.draw_button(250, 300, 100, 50, screen, (255, 0, 0), 'Register', font, self.textColor)
 
@@ -165,6 +180,7 @@ class Wordle:
         username = ''
         password = ''
         error_message = ''
+
         click1 = False
         click2 = False
         running = True
@@ -179,6 +195,9 @@ class Wordle:
             self.draw_text('Login', header_font,self.textColor, screen, 20, 20)
 
             self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+
+            
+   
 
             self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
             name_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
@@ -306,9 +325,8 @@ class Wordle:
             mainClock.tick(60)
 
     def wordle_screen(self,screen):
-        username = ''
-        password = ''
         error_message = ''
+        guess = ''
         click1 = False
         click2 = False
         running = True
@@ -325,8 +343,9 @@ class Wordle:
             self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
 
             self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
-            guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
-
+            
+            #guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
+            guess_box = self.draw_guessBox(250, 330, 50, 50, screen, (250,0,0), guess, header_font, self.textColor)
             self.draw_keyboard(200,400,screen, (255,0,0), self.textColor,input_font)
 
             
@@ -353,13 +372,13 @@ class Wordle:
                         #error_message  = self.check_login(username, password,screen)
 
                 if event.type == pygame.KEYDOWN:
-                    if click1 == True:
-                        if event.key == pygame.K_BACKSPACE:
-                            username = username[:-1]
-                        elif event.key == pygame.K_RETURN:
-                            username = username  
-                        else:
-                            username += event.unicode
+                    #if click1 == True:
+                    if event.key == pygame.K_BACKSPACE:
+                        guess = guess[:-1]
+                    elif event.key == pygame.K_RETURN:
+                        guess = guess
+                    else:
+                        guess += event.unicode
                     if click2 == True:
                         if event.key == pygame.K_BACKSPACE:
                             password = password[:-1]
