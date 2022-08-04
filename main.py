@@ -6,6 +6,7 @@ from player import Player
 import words
 from pygame.locals import *
 import json
+import pygame.freetype
 
 
 class Wordle:
@@ -48,6 +49,7 @@ class Wordle:
 
     def draw_inputBox(self, x, y, width, height, screen, inputBox_color, text, font, text_color, outline=2):
         textobj = font.render(text, 1, text_color)
+
         width = max(100, textobj.get_width()+10)
         inputBox = pygame.Rect(x, y, width, height)
         pygame.draw.rect(screen, (inputBox_color), inputBox, outline)
@@ -58,17 +60,32 @@ class Wordle:
 
     def draw_guessBox(self, x, y, width, height, screen, inputBox_color, text, font, text_color, outline=2):
         textobj = font.render(text, 1, text_color)
-        #width = max(100, textobj.get_width()+10)
-        num = 5 
-        while num != 0:
-            x += 55
-            inputBox = pygame.Rect(x, y, width, height)
-            pygame.draw.rect(screen, (inputBox_color), inputBox, outline)
-            num -= 1
+        inputBox = pygame.Rect(x, y, width, height)
+        pygame.draw.rect(screen, (inputBox_color), inputBox, outline)
         textrect = textobj.get_rect()
-        textrect.topleft = (x-200+5, y+5)
+        textrect.topleft = (x+5, y+5)
         screen.blit(textobj, textrect)
         return inputBox
+
+
+    def draw_guessRow(self, x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5, font, text_color, outline=2):
+        box1 = self.draw_guessBox(x, y, width, height, screen, inputBox_color, L1,font, text_color)
+        box2 = self.draw_guessBox(x+55, y, width, height, screen, inputBox_color, L2,font, text_color)
+        box3 = self.draw_guessBox(x+110, y, width, height, screen, inputBox_color, L3,font, text_color)
+        box4 = self.draw_guessBox(x+165, y, width, height, screen, inputBox_color, L4,font, text_color)
+        box5 = self.draw_guessBox(x+220, y, width, height, screen, inputBox_color, L5,font, text_color)
+        return box1
+
+    def draw_guessTable(self, x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5, font, text_color, outline=2):
+        guess_box = self.draw_guessRow(x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box2 = self.draw_guessRow(x, y+55, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box3 = self.draw_guessRow(x, y+110, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box4 = self.draw_guessRow(x, y+165, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box5 = self.draw_guessRow(x, y+220, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box6 = self.draw_guessRow(x, y+275, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+
+
+
 
     def draw_keyboard(self,x,y,screen,button_color,text_color,font):
         runs = 0
@@ -327,10 +344,14 @@ class Wordle:
     def wordle_screen(self,screen):
         error_message = ''
         guess = ''
+        L1,L2,L3,L4,L5 = '','','','',''    
         click1 = False
         click2 = False
         running = True
         while running:
+
+            guess_letters = []
+            
 
             header_font = pygame.font.SysFont(None, 50)
             text_font = pygame.font.SysFont(None, 30)
@@ -342,11 +363,10 @@ class Wordle:
 
             self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
 
-            self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
-            
-            #guess_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
-            guess_box = self.draw_guessBox(250, 330, 50, 50, screen, (250,0,0), guess, header_font, self.textColor)
-            self.draw_keyboard(200,400,screen, (255,0,0), self.textColor,input_font)
+
+            guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,header_font, self.textColor)
+
+            self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,input_font)
 
             
             enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
@@ -360,25 +380,44 @@ class Wordle:
                     self.exit_screen()
 
                 if event.type == MOUSEBUTTONDOWN:
-                    if guess_box.collidepoint(event.pos):
-                        click1 = True
-                    else:
-                        click1 = False
                     if back_button.collidepoint((mx, my)):
                         running = False
                     if enter_button.collidepoint((mx, my)):
                         error_message = ''
-                        #check guess
-                        #error_message  = self.check_login(username, password,screen)
 
                 if event.type == pygame.KEYDOWN:
                     #if click1 == True:
                     if event.key == pygame.K_BACKSPACE:
                         guess = guess[:-1]
+                        if len(guess) == 0:
+                            L1 = ''
+                        if len(guess) == 1:
+                            L2 = ''
+                        if len(guess) == 2:
+                            L3 = ''
+                        if len(guess) == 3:
+                            L4 = ''
+                        if len(guess) == 4:
+                            L5 = ''
                     elif event.key == pygame.K_RETURN:
                         guess = guess
                     else:
-                        guess += event.unicode
+                        if len(guess) != 5:
+                            guess += event.unicode
+                            for letter in guess:
+                                guess_letters += letter
+                            if len(guess) == 1:
+                                L1 = guess_letters[0]
+                            if len(guess) == 2:
+                                L2 = guess_letters[1]
+                            if len(guess) == 3:
+                                L3 = guess_letters[2]
+                            if len(guess) == 4:
+                                L4 = guess_letters[3]
+                            if len(guess) == 5:
+                                L5 = guess_letters[4]
+                                
+
                     if click2 == True:
                         if event.key == pygame.K_BACKSPACE:
                             password = password[:-1]
