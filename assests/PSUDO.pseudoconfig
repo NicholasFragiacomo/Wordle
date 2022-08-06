@@ -1,13 +1,11 @@
-#Think of an while loop to keep it all open#
-
 BEGIN Start
 
     Show Start screen
-    IF Login pressed
+    IF Login button pressed
         CALL Login
-    IF Register pressed
+    IF Register button pressed
         CALL Register
-    IF Exit pressed
+    IF Exit button pressed
         CALL Exit
 
 END Start
@@ -17,40 +15,85 @@ BEGIN Login
     Show Login screen
     IF Enter pressed THEN
         
-        IF username and password = '' THEN 
+        IF username and password EQUALS '' THEN 
             
-            Display 'Nothing Entered'
-        
-        ElSE
-            
-            IF username not in DB THEN
-                Display "wrong username"
-            ENDIF
-            
-            IF password not in DB THEN
-                Display "wrong password"
-            ENDIF
+            DISPLAY 'ERROR: you forgot username'
 
-            IF username and password in DB THEN
-                CALL Wordle
-            ENDIF
+        END IF
+
+        IF username and password EQUALS '' THEN 
+            
+            DISPLAY 'ERROR: You forgot password'
+
+        END IF
+        
+        IF username and password NOT EQUALS '' THEH
+
+            IF username IN DB
+
+                IF password EQUALS DB password
+
+                    CALL Wordle
+                
+                END IF
+
+                ELSE
+
+                    DISPLAY 'password dont match what we got'
+                
+                END ELSE
+
+            END IF
+
+            ELSE
+
+                RETURN 'That username aint real'
+            
+            END ELSE
 
     IF Back pressed
         CALL Start
+    END IF
+
     IF Exit pressed
         CALL Exit
+    END IF
     
 END Login
 
 BEGIN Register
+         
+        IF username and password EQUALS '' THEN 
+            
+            DISPLAY 'ERROR: you forgot username'
 
-    show Register screen
-    IF Enter pressed
-        IF username and password != '' and username and password are not in DB
-            Add username and password to DB
-            CALL Login
-        IF username is in DB
-            Display "Username already in DB"
+        END IF
+
+        IF username and password EQUALS '' THEN 
+            
+            DISPLAY 'ERROR: You forgot password'
+
+        END IF
+
+       IF username and password NOT EQUALS '' THEH
+
+            IF username NOT IN DB:
+
+                SET User EQUAL TO Username,passowrd {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
+
+                with open("DB.json", 'w') as data:
+
+                    json.dump(self.DB, data)
+
+                    data.close()
+
+                    self.login_screen(screen)
+
+            ELSE:
+
+                RETURN 'Username taken'
+
+
     IF Back pressed
         CALL Start
     IF Exit pressed
@@ -63,8 +106,8 @@ BEGIN Wordle
     WHILE Gameover is not True
         
         IF Enter pressed
-            IF Letters Fill 
-
+            IF Guess EQUALS 5 letters
+		
     ENDWHILE
 
 END Wordle
@@ -74,7 +117,3 @@ BEGIN Exit
     Close Program
 
 END Exit
-
-
-
-

@@ -128,7 +128,7 @@ DEFINE CLASS Wordle:
 
         IF password EQUALS '':
 
-            RETURN 'ERROR: You forgot passowrd '
+            RETURN 'ERROR: You forgot passowrd'
 
         IF username and password != '':
 

@@ -76,14 +76,44 @@ class Wordle:
         box5 = self.draw_guessBox(x+220, y, width, height, screen, inputBox_color, L5,font, text_color)
         return box1
 
-    def draw_guessTable(self, x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5, font, text_color, outline=2):
+    def draw_guessTable(self, x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30, font, text_color,line, outline=2):
         guess_box = self.draw_guessRow(x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
-        guess_box2 = self.draw_guessRow(x, y+55, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
-        guess_box3 = self.draw_guessRow(x, y+110, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
-        guess_box4 = self.draw_guessRow(x, y+165, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
-        guess_box5 = self.draw_guessRow(x, y+220, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
-        guess_box6 = self.draw_guessRow(x, y+275, width, height, screen, inputBox_color, L1,L2,L3,L4,L5,font, text_color)
+        guess_box2 = self.draw_guessRow(x, y+55, width, height, screen, inputBox_color, L6,L7,L8,L9,L10,font, text_color)
+        guess_box3 = self.draw_guessRow(x, y+110, width, height, screen, inputBox_color, L11,L12,L13,L14,L15,font, text_color)
+        guess_box4 = self.draw_guessRow(x, y+165, width, height, screen, inputBox_color, L16,L17,L18,L19,L20,font, text_color)
+        guess_box5 = self.draw_guessRow(x, y+220, width, height, screen, inputBox_color, L21,L22,L23,L24,L25,font, text_color)
+        guess_box6 = self.draw_guessRow(x, y+275, width, height, screen, inputBox_color, L26,L27,L28,L29,L30,font, text_color)
+        return guess_box,guess_box2,guess_box3,guess_box4,guess_box5,guess_box6
 
+    def backspace(self,L1,L2,L3,L4,L5,guess_1):
+        guess_1 = guess_1[:-1]
+        if len(guess_1) == 0:
+            L1 = ''
+        if len(guess_1) == 1:
+            L2 = ''
+        if len(guess_1) == 2:
+            L3 = ''
+        if len(guess_1) == 3:
+            L4 = ''
+        if len(guess_1) == 4:
+            L5 = ''
+        return L1,L2,L3,L4,L5,guess_1
+
+    def write(self,L1,L2,L3,L4,L5,guess_1,guess_letters):
+        
+        for letter in guess_1:
+            guess_letters += letter
+        if len(guess_1) == 1:
+            L1 = guess_letters[0]
+        if len(guess_1) == 2:
+            L2 = guess_letters[1]
+        if len(guess_1) == 3:
+            L3 = guess_letters[2]
+        if len(guess_1) == 4:
+            L4 = guess_letters[3]
+        if len(guess_1) == 5:
+            L5 = guess_letters[4]
+        return L1,L2,L3,L4,L5,guess_1,guess_letters
 
 
 
@@ -343,11 +373,13 @@ class Wordle:
 
     def wordle_screen(self,screen):
         error_message = ''
-        guess = ''
-        L1,L2,L3,L4,L5 = '','','','',''    
+        guess_1,guess_2,guess_3,guess_4,guess_5,guess_6 = '','','','','',''
+        L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30 = '','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''
+        letters = [L1,L2,L3,L4,L5,L6,L7,L8,L9,L10]
         click1 = False
         click2 = False
         running = True
+        line = 1
         while running:
 
             guess_letters = []
@@ -364,7 +396,7 @@ class Wordle:
             self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
 
 
-            guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,header_font, self.textColor)
+            guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
 
             self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,input_font)
 
@@ -388,34 +420,48 @@ class Wordle:
                 if event.type == pygame.KEYDOWN:
                     #if click1 == True:
                     if event.key == pygame.K_BACKSPACE:
-                        guess = guess[:-1]
-                        if len(guess) == 0:
-                            L1 = ''
-                        if len(guess) == 1:
-                            L2 = ''
-                        if len(guess) == 2:
-                            L3 = ''
-                        if len(guess) == 3:
-                            L4 = ''
-                        if len(guess) == 4:
-                            L5 = ''
+                        if line == 1:
+                            L1,L2,L3,L4,L5,guess_1 = self.backspace(L1,L2,L3,L4,L5,guess_1)
+                        if line == 2:
+                            L6,L7,L8,L9,L10,guess_2 = self.backspace(L6,L7,L8,L9,L10,guess_2)
+                        if line == 3:
+                            L11,L12,L13,L14,L15,guess_3 = self.backspace(L11,L12,L13,L14,L15,guess_3)
+                        if line == 4:
+                            L16,L17,L18,L19,L20,guess_4 = self.backspace(L16,L17,L18,L19,L20,guess_4)
+                        if line == 5:
+                            L21,L22,L23,L24,L25,guess_5 = self.backspace(L21,L22,L23,L24,L25,guess_5)
+                        if line == 6:
+                            L26,L27,L28,L29,L30,guess_6 = self.backspace(L26,L27,L28,L29,L30,guess_6)
+
+
                     elif event.key == pygame.K_RETURN:
-                        guess = guess
+                        if len(guess_1) == 5:
+                            line += 1
                     else:
-                        if len(guess) != 5:
-                            guess += event.unicode
-                            for letter in guess:
-                                guess_letters += letter
-                            if len(guess) == 1:
-                                L1 = guess_letters[0]
-                            if len(guess) == 2:
-                                L2 = guess_letters[1]
-                            if len(guess) == 3:
-                                L3 = guess_letters[2]
-                            if len(guess) == 4:
-                                L4 = guess_letters[3]
-                            if len(guess) == 5:
-                                L5 = guess_letters[4]
+                        if line == 1:
+                            if len(guess_1) != 5:
+                                guess_1 += event.unicode
+                                L1,L2,L3,L4,L5,guess_1,guess_letters = self.write(L1,L2,L3,L4,L5,guess_1,guess_letters)
+                        if line == 2:
+                            if len(guess_2) != 5:
+                                guess_2 += event.unicode
+                                L6,L7,L8,L9,L10,guess_2,guess_letters = self.write(L6,L7,L8,L9,L10,guess_2,guess_letters)
+                        if line == 3:
+                            if len(guess_3) != 5:
+                                guess_3 += event.unicode
+                                L11,L12,L13,L14,L15,guess_3,guess_letters = self.write(L11,L12,L13,L14,L15,guess_3,guess_letters)
+                        if line == 4:
+                            if len(guess_4) != 5:
+                                guess_4 += event.unicode
+                                L16,L17,L18,L19,L20,guess_4,guess_letters = self.write(L16,L17,L18,L19,L20,guess_4,guess_letters)
+                        if line == 5:
+                            if len(guess_5) != 5:
+                                guess_5 += event.unicode
+                                L21,L22,L23,L24,L25,guess_5,guess_letters = self.write(L21,L22,L23,L24,L25,guess_5,guess_letters)
+                        if line == 6:
+                            if len(guess_6) != 5:
+                                guess_6 += event.unicode
+                                L26,L27,L28,L29,L30,guess_6,guess_letters = self.write(L26,L27,L28,L29,L30,guess_6,guess_letters)
                                 
 
                     if click2 == True:
