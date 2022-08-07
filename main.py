@@ -435,8 +435,25 @@ class Wordle:
 
 
                     elif event.key == pygame.K_RETURN:
-                        if len(guess_1) == 5:
-                            line += 1
+                        if line ==1:
+                            if len(guess_1) == 5:
+                                line += 1
+                        if line ==2:
+                            if len(guess_2) == 5:
+                                line += 1
+                        if line ==3:
+                            if len(guess_3) == 5:
+                                line += 1
+                        if line ==4:
+                            if len(guess_4) == 5:
+                                line += 1
+                        if line ==5:
+                            if len(guess_5) == 5:
+                                line += 1
+                        if line ==6:
+                            if len(guess_6) == 5:
+                                line += 1
+                                
                     else:
                         if line == 1:
                             if len(guess_1) != 5:
