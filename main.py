@@ -182,6 +182,31 @@ class Wordle:
             else:
                 return 'Username taken'
 
+    def check_guess(self,word,guess):
+        word_letters = []
+        guess_letters1 =[]
+        num = 0
+
+        for i in word:
+            word_letters.append(i)
+        print(word_letters)
+
+        for i in guess:
+            guess_letters1.append(i)
+        
+        for i in guess_letters1:
+            if i == word_letters[num]:
+                print('green')
+            if i in word_letters:
+                if i != word_letters[num]:
+                    print('yellow')
+            if i not in word_letters:
+                print('grey')
+
+            num+=1 
+
+        print(guess_letters1)
+
     ''' 
     Screens
     '''
@@ -380,6 +405,8 @@ class Wordle:
         click2 = False
         running = True
         line = 1
+        word = random.choice(words.WORDS)
+        print(word)
         while running:
 
             guess_letters = []
@@ -437,9 +464,11 @@ class Wordle:
                     elif event.key == pygame.K_RETURN:
                         if line ==1:
                             if len(guess_1) == 5:
+                                self.check_guess(word,guess_1)
                                 line += 1
                         if line ==2:
                             if len(guess_2) == 5:
+                                self.check_guess(word, guess_2)
                                 line += 1
                         if line ==3:
                             if len(guess_3) == 5:
