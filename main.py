@@ -63,10 +63,30 @@ class Wordle:
         inputBox = pygame.Rect(x, y, width, height)
         pygame.draw.rect(screen, (inputBox_color), inputBox, outline)
         textrect = textobj.get_rect()
-        textrect.topleft = (x+5, y+5)
+        textrect.topleft = (x+15, y+10)
         screen.blit(textobj, textrect)
         return inputBox
 
+    def draw_keyboard(self,x,y,screen,button_color,text_color,font):
+        runs = 0
+        dx = x
+        lines = 0
+        for letter in self.Alp:
+
+            # changes the line line of the keyboard 
+            if runs > 8:
+                x = dx
+                y = y + 25
+                lines += 1
+                runs = 0
+            # ensures the last line of the keyboard is even
+            if lines == 2:
+                x += 25
+                lines = 0 
+            
+            letter = self.draw_button(x,y,20,20,screen,button_color,letter,font,text_color)
+            runs += 1 
+            x += 25
 
     def draw_guessRow(self, x, y, width, height, screen, inputBox_color, L1,L2,L3,L4,L5, font, text_color, outline=2):
         box1 = self.draw_guessBox(x, y, width, height, screen, inputBox_color, L1,font, text_color)
@@ -84,6 +104,10 @@ class Wordle:
         guess_box5 = self.draw_guessRow(x, y+220, width, height, screen, inputBox_color, L21,L22,L23,L24,L25,font, text_color)
         guess_box6 = self.draw_guessRow(x, y+275, width, height, screen, inputBox_color, L26,L27,L28,L29,L30,font, text_color)
         return guess_box,guess_box2,guess_box3,guess_box4,guess_box5,guess_box6
+
+    def draw_colorBox(self,x,y,width,height,screen,box_color):
+        box = pygame.Rect(x, y, width, height)
+        pygame.draw.rect(screen, (box_color), box, 0)
 
     def backspace(self,L1,L2,L3,L4,L5,guess_1):
         guess_1 = guess_1[:-1]
@@ -114,31 +138,6 @@ class Wordle:
         if len(guess_1) == 5:
             L5 = guess_letters[4]
         return L1,L2,L3,L4,L5,guess_1,guess_letters
-
-
-
-    def draw_keyboard(self,x,y,screen,button_color,text_color,font):
-        runs = 0
-        dx = x
-        lines = 0
-        for letter in self.Alp:
-
-            # changes the line line of the keyboard 
-            if runs > 8:
-                x = dx
-                y = y + 25
-                lines += 1
-                runs = 0
-            # ensures the last line of the keyboard is even
-            if lines == 2:
-                x += 25
-                lines = 0 
-            
-            letter = self.draw_button(x,y,20,20,screen,button_color,letter,font,text_color)
-            runs += 1 
-            x += 25
-
-        
 
     def check_login(self, username, password,screen):
 
@@ -182,21 +181,27 @@ class Wordle:
             else:
                 return 'Username taken'
 
-    def check_guess(self,word,guess):
+    def check_guess(self,word,guess,screen):
         word_letters = []
         guess_letters1 =[]
+        colors = [()]
         num = 0
+        x,y = 175,100
+        dis=55
 
         for i in word:
             word_letters.append(i)
-        print(word_letters)
+        print(f'WORD - {word_letters}')
 
         for i in guess:
             guess_letters1.append(i)
+        print(f'GUESS - {guess_letters1}')
         
         for i in guess_letters1:
             if i == word_letters[num]:
                 print('green')
+                self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
+                dis+=55
             if i in word_letters:
                 if i != word_letters[num]:
                     print('yellow')
@@ -205,7 +210,10 @@ class Wordle:
 
             num+=1 
 
-        print(guess_letters1)
+        return colors
+
+    
+
 
     ''' 
     Screens
@@ -425,6 +433,13 @@ class Wordle:
 
             guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
 
+
+            x,y = 175,105
+            for i in range(5):
+                self.draw_colorBox(x,y,45,45,screen,(0,255,0))
+                x+=55
+                
+
             self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,input_font)
 
             
@@ -464,23 +479,28 @@ class Wordle:
                     elif event.key == pygame.K_RETURN:
                         if line ==1:
                             if len(guess_1) == 5:
-                                self.check_guess(word,guess_1)
+                                R1_colors = self.check_guess(word,guess_1,screen)
+                                
                                 line += 1
                         if line ==2:
                             if len(guess_2) == 5:
-                                self.check_guess(word, guess_2)
+                                self.check_guess(word, guess_2,screen)
                                 line += 1
                         if line ==3:
                             if len(guess_3) == 5:
+                                self.check_guess(word, guess_3,screen)
                                 line += 1
                         if line ==4:
                             if len(guess_4) == 5:
+                                self.check_guess(word, guess_4,screen)
                                 line += 1
                         if line ==5:
                             if len(guess_5) == 5:
+                                self.check_guess(word, guess_5,screen)
                                 line += 1
                         if line ==6:
                             if len(guess_6) == 5:
+                                self.check_guess(word, guess_6,screen)
                                 line += 1
                                 
                     else:
