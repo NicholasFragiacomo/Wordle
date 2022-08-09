@@ -184,7 +184,7 @@ class Wordle:
     def check_guess(self,word,guess,screen):
         word_letters = []
         guess_letters1 =[]
-        colors = [()]
+        colors = []
         num = 0
         x,y = 175,100
         dis=55
@@ -200,20 +200,24 @@ class Wordle:
         for i in guess_letters1:
             if i == word_letters[num]:
                 print('green')
-                self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
+                #self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
+                colors.append((0,255,0))
                 dis+=55
             if i in word_letters:
                 if i != word_letters[num]:
                     print('yellow')
+                    colors.append((255,255,0))
+                    #self.draw_colorBox(x+dis,y,45,45,screen,(255,0,255))
+                    dis += 55
             if i not in word_letters:
                 print('grey')
+                colors.append((220,220,220))
+                #self.draw_colorBox(x+dis,y,45,45,screen,(220,220,220))
+                dis += 55
 
             num+=1 
 
         return colors
-
-    
-
 
     ''' 
     Screens
@@ -412,6 +416,7 @@ class Wordle:
         click1 = False
         click2 = False
         running = True
+        R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors = [],[],[],[],[],[]
         line = 1
         word = random.choice(words.WORDS)
         print(word)
@@ -434,10 +439,41 @@ class Wordle:
             guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
 
 
+            
             x,y = 175,105
-            for i in range(5):
-                self.draw_colorBox(x,y,45,45,screen,(0,255,0))
+            for i in R1_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
                 x+=55
+            y+=55
+            x= 175
+            for i in R2_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
+                x+=55
+            y+=55
+            x= 175
+            for i in R3_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
+                x+=55
+            y+=55
+            x= 175
+            for i in R4_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
+                x+=55
+            y+=55
+            x= 175
+            for i in R5_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
+                x+=55
+            y+=55
+            x= 175
+            for i in R6_colors:
+                self.draw_colorBox(x,y,45,45,screen,i)
+                x+=55
+
+
+        
+                
+            #self.draw_ColieBox(x,y,45,45,screen,i)
                 
 
             self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,input_font)
@@ -475,7 +511,6 @@ class Wordle:
                         if line == 6:
                             L26,L27,L28,L29,L30,guess_6 = self.backspace(L26,L27,L28,L29,L30,guess_6)
 
-
                     elif event.key == pygame.K_RETURN:
                         if line ==1:
                             if len(guess_1) == 5:
@@ -484,23 +519,23 @@ class Wordle:
                                 line += 1
                         if line ==2:
                             if len(guess_2) == 5:
-                                self.check_guess(word, guess_2,screen)
+                                R2_colors = self.check_guess(word, guess_2,screen)
                                 line += 1
                         if line ==3:
                             if len(guess_3) == 5:
-                                self.check_guess(word, guess_3,screen)
+                                R3_colors = self.check_guess(word, guess_3,screen)
                                 line += 1
                         if line ==4:
                             if len(guess_4) == 5:
-                                self.check_guess(word, guess_4,screen)
+                                R4_colors = self.check_guess(word, guess_4,screen)
                                 line += 1
                         if line ==5:
                             if len(guess_5) == 5:
-                                self.check_guess(word, guess_5,screen)
+                                R5_colors = self.check_guess(word, guess_5,screen)
                                 line += 1
                         if line ==6:
                             if len(guess_6) == 5:
-                                self.check_guess(word, guess_6,screen)
+                                R6_colors = self.check_guess(word, guess_6,screen)
                                 line += 1
                                 
                     else:
