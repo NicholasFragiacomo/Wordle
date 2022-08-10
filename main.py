@@ -197,12 +197,14 @@ class Wordle:
             guess_letters1.append(i)
         print(f'GUESS - {guess_letters1}')
         
+        
         for i in guess_letters1:
             if i == word_letters[num]:
                 print('green')
                 #self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
                 colors.append((0,255,0))
                 dis+=55
+
             if i in word_letters:
                 if i != word_letters[num]:
                     print('yellow')
@@ -340,6 +342,7 @@ class Wordle:
         username = ''
         password = ''
         error_message = ''
+
         click1 = False
         click2 = False
         running = True
@@ -418,6 +421,7 @@ class Wordle:
         running = True
         R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors = [],[],[],[],[],[]
         line = 1
+        guessed_words = []
         word = random.choice(words.WORDS)
         print(word)
         while running:
@@ -432,11 +436,11 @@ class Wordle:
 
             screen.fill(self.backgroundColor)
             self.draw_text('Wordle', header_font,self.textColor, screen, 20, 20)
+            
 
-            self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+            self.draw_text(error_message,text_font,(255,0,0),screen,200,475)
 
 
-            guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
 
 
             
@@ -471,10 +475,7 @@ class Wordle:
                 x+=55
 
 
-        
-                
-            #self.draw_ColieBox(x,y,45,45,screen,i)
-                
+            guess_tabel = self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
 
             self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,input_font)
 
@@ -492,8 +493,8 @@ class Wordle:
                 if event.type == MOUSEBUTTONDOWN:
                     if back_button.collidepoint((mx, my)):
                         running = False
-                    if enter_button.collidepoint((mx, my)):
-                        error_message = ''
+                    # if enter_button.collidepoint((mx, my)):
+                    #     error_message = ''
 
                 if event.type == pygame.KEYDOWN:
                     #if click1 == True:
@@ -514,15 +515,28 @@ class Wordle:
                     elif event.key == pygame.K_RETURN:
                         if line ==1:
                             if len(guess_1) == 5:
-                                R1_colors = self.check_guess(word,guess_1,screen)
-                                
-                                line += 1
+                                if guess_1 in words.WORDS:
+                                    if guess_1 not in guessed_words:
+                                        R1_colors = self.check_guess(word,guess_1,screen)
+                                        line += 1
+                                        guessed_words.append(guess_1)
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
+                                    
                         if line ==2:
-                            if len(guess_2) == 5:
-                                R2_colors = self.check_guess(word, guess_2,screen)
-                                line += 1
+                            if len(guess_2) == 5: 
+                                if guess_2 in words.WORDS:
+                                    if guess_2 not in guessed_words:
+                                        R2_colors = self.check_guess(word, guess_2,screen)
+                                        line += 1
                         if line ==3:
                             if len(guess_3) == 5:
+                    
                                 R3_colors = self.check_guess(word, guess_3,screen)
                                 line += 1
                         if line ==4:
@@ -572,10 +586,9 @@ class Wordle:
                             password = password
                         else:
                             password += event.unicode
-                    if event.key == pygame.K_RETURN:
-                        error_message = ''
-                        #check guess
-                        #error_message = self.check_login(username, password,screen)
+                    # if event.key == pygame.K_RETURN:
+                    #     error_message = ''
+
 
             pygame.display.update()
             mainClock.tick(60)
