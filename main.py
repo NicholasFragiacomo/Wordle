@@ -153,7 +153,7 @@ class Wordle:
         if username and password != '':
             if username in self.DB:
                 if password == self.DB[username]['password']:
-                    self.wordle_screen(screen)
+                    self.wordle_screen(screen,username)
                     # Start the wordle  
                 else:
                     return 'password dont match what we got'
@@ -266,6 +266,7 @@ class Wordle:
         username = ''
         password = ''
         error_message = ''
+        lose_message = ''
 
         click1 = False
         click2 = False
@@ -411,14 +412,18 @@ class Wordle:
             pygame.display.update()
             mainClock.tick(60)
 
-    def wordle_screen(self,screen):
+    def wordle_screen(self,screen,username):
         error_message = ''
+        win_message = ''
+        lose_message = ''
         guess_1,guess_2,guess_3,guess_4,guess_5,guess_6 = '','','','','',''
         L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30 = '','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''
         letters = [L1,L2,L3,L4,L5,L6,L7,L8,L9,L10]
         click1 = False
         click2 = False
         running = True
+        win = False
+        lose = False
         R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors = [],[],[],[],[],[]
         line = 1
         guessed_words = []
@@ -439,6 +444,9 @@ class Wordle:
             
 
             self.draw_text(error_message,text_font,(255,0,0),screen,200,475)
+            self.draw_text(win_message,header_font,(0,250,0),screen,25,450)
+            self.draw_text(lose_message,header_font,(255,0,0),screen,25,450)
+
 
 
 
@@ -513,13 +521,28 @@ class Wordle:
                             L26,L27,L28,L29,L30,guess_6 = self.backspace(L26,L27,L28,L29,L30,guess_6)
 
                     elif event.key == pygame.K_RETURN:
+                        if win == True:
+                            self.wordle_screen(screen,username)
+                        if lose == True:
+                            self.wordle_screen(screen,username)
+                        
                         if line ==1:
                             if len(guess_1) == 5:
                                 if guess_1 in words.WORDS:
                                     if guess_1 not in guessed_words:
-                                        R1_colors = self.check_guess(word,guess_1,screen)
-                                        line += 1
-                                        guessed_words.append(guess_1)
+                                        if guess_1 != word:
+                                            R1_colors = self.check_guess(word,guess_1,screen)
+                                            guessed_words.append(guess_1)
+                                            line += 1
+                                        else:
+                                            R1_colors = self.check_guess(word,guess_1,screen)
+                                            guessed_words.append(guess_1)
+                                            win = True
+
+                                            # if guess_1 == word:
+                                            #     line += 1
+                                            # else:
+                                            #     win = True    
                                     else:
                                         error_message = ''
                                         error_message = 'Cant guess that again'
@@ -529,28 +552,107 @@ class Wordle:
                                     error_message = 'Thats not a word'
                                     
                         if line ==2:
-                            if len(guess_2) == 5: 
+                            if len(guess_2) == 5:
                                 if guess_2 in words.WORDS:
                                     if guess_2 not in guessed_words:
-                                        R2_colors = self.check_guess(word, guess_2,screen)
-                                        line += 1
+                                        if guess_2 != word:
+                                            R2_colors = self.check_guess(word,guess_2,screen)
+                                            guessed_words.append(guess_2)
+                                            line += 1
+                                        else:
+                                            R2_colors = self.check_guess(word,guess_2,screen)
+                                            guessed_words.append(guess_2)
+                                            win = True
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
                         if line ==3:
                             if len(guess_3) == 5:
-                    
-                                R3_colors = self.check_guess(word, guess_3,screen)
-                                line += 1
+                                if guess_3 in words.WORDS:
+                                    if guess_3 not in guessed_words:
+                                        if guess_3 != word:
+                                            R3_colors = self.check_guess(word,guess_3,screen)
+                                            guessed_words.append(guess_3)
+                                            line += 1
+                                        else:
+                                            R3_colors = self.check_guess(word,guess_3,screen)
+                                            guessed_words.append(guess_3)
+                                            win = True
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
+
                         if line ==4:
                             if len(guess_4) == 5:
-                                R4_colors = self.check_guess(word, guess_4,screen)
-                                line += 1
+                                if guess_4 in words.WORDS:
+                                    if guess_4 not in guessed_words:
+                                        if guess_4 != word:
+                                            R4_colors = self.check_guess(word,guess_4,screen)
+                                            guessed_words.append(guess_4)
+                                            line += 1
+                                        else:
+                                            R4_colors = self.check_guess(word,guess_4,screen)
+                                            guessed_words.append(guess_4)
+                                            win = True
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
+
                         if line ==5:
                             if len(guess_5) == 5:
-                                R5_colors = self.check_guess(word, guess_5,screen)
-                                line += 1
+                                if guess_5 in words.WORDS:
+                                    if guess_5 not in guessed_words:
+                                        if guess_5 != word:
+                                            R5_colors = self.check_guess(word,guess_5,screen)
+                                            guessed_words.append(guess_5)
+                                            line += 1
+                                        else:
+                                            R5_colors = self.check_guess(word,guess_5,screen)
+                                            guessed_words.append(guess_5)
+                                            win = True
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
                         if line ==6:
                             if len(guess_6) == 5:
-                                R6_colors = self.check_guess(word, guess_6,screen)
-                                line += 1
+                                if guess_6 in words.WORDS:
+                                    if guess_6 not in guessed_words:
+                                        if guess_6 != word:
+                                            R6_colors = self.check_guess(word,guess_6,screen)
+                                            guessed_words.append(guess_6)
+                                            lose_message = 'Unlcuky - press enter to play again'
+                                            lose = True
+                                        else:
+                                            R6_colors = self.check_guess(word,guess_6,screen)
+                                            guessed_words.append(guess_6)
+                                            win = True
+                                            # if guess_1 == word:
+                                            #     line += 1
+                                            # else:
+                                            #     win = True    
+                                    else:
+                                        error_message = ''
+                                        error_message = 'Cant guess that again'
+                                else:
+                                    
+                                    error_message = ''
+                                    error_message = 'Thats not a word'
                                 
                     else:
                         if line == 1:
@@ -588,6 +690,11 @@ class Wordle:
                             password += event.unicode
                     # if event.key == pygame.K_RETURN:
                     #     error_message = ''
+
+                    if win == True:
+                        error_message = ''
+                        win_message = 'You Won - Press Enter to play again'
+                        
 
 
             pygame.display.update()
