@@ -492,7 +492,7 @@ class Wordle:
 
             back_button = self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
 
-            stats_button = self.draw_button(250, 200, 100, 50, screen, (255, 0, 0), 'stats', text_font, self.textColor)
+            stats_button = self.draw_button(250, 600, 100, 50, screen, (255, 0, 0), 'stats', text_font, self.textColor)
             # Events
             for event in pygame.event.get():
 
@@ -526,8 +526,16 @@ class Wordle:
 
                     elif event.key == pygame.K_RETURN:
                         if win == True:
+                            self.DB[username]['numGames']+=1
+                            with open("DB.json", 'w') as data:
+                                json.dump(self.DB, data)
+                                data.close()
                             self.wordle_screen(screen,username)
                         if lose == True:
+                            self.DB[username]['numGames']+=1
+                            with open("DB.json", 'w') as data:
+                                json.dump(self.DB, data)
+                                data.close()
                             self.wordle_screen(screen,username)
                         
                         if line ==1:
@@ -541,12 +549,9 @@ class Wordle:
                                         else:
                                             R1_colors = self.check_guess(word,guess_1,screen)
                                             guessed_words.append(guess_1)
+                                            
                                             win = True
 
-                                            # if guess_1 == word:
-                                            #     line += 1
-                                            # else:
-                                            #     win = True    
                                     else:
                                         error_message = ''
                                         error_message = 'Cant guess that again'
@@ -646,10 +651,7 @@ class Wordle:
                                             R6_colors = self.check_guess(word,guess_6,screen)
                                             guessed_words.append(guess_6)
                                             win = True
-                                            # if guess_1 == word:
-                                            #     line += 1
-                                            # else:
-                                            #     win = True    
+                                                
                                     else:
                                         error_message = ''
                                         error_message = 'Cant guess that again'
@@ -705,7 +707,6 @@ class Wordle:
             mainClock.tick(60)
         
     def stats_screen(self, screen,username):
-        username = ''
         password = ''
         error_message = ''
         lose_message = ''
@@ -728,13 +729,23 @@ class Wordle:
             
    
 
-            self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
-            name_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
+            # self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
+            # name_box = self.draw_inputBox(250, 330, 100, 25, screen, (255, 255, 255), username, input_font, self.textColor, 2)
 
-            self.draw_text("Password:", text_font,self.textColor, screen, 250, 400)
-            password_box = self.draw_inputBox(250, 430, 100, 25, screen, (255, 255, 255), password, input_font, self.textColor, 2)
+            # self.draw_text("Password:", text_font,self.textColor, screen, 250, 400)
+            # password_box = self.draw_inputBox(250, 430, 100, 25, screen, (255, 255, 255), password, input_font, self.textColor, 2)
 
-            enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
+            # enter_button = self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
+
+            with open("DB.json",'r') as DB:
+                data = DB.read()
+                self.DB = json.loads(data)
+            
+            
+            self.draw_text(f"Number of Games: {self.DB[username]['numGames']}", text_font,self.textColor, screen, 250, 400)
+            self.draw_text(f"Guess Distrabution: {self.DB[username]['GuessDist']}%", text_font,self.textColor, screen, 250, 250)
+            self.draw_text(f"Percentage win: {self.DB[username]['PercWin']}", text_font,self.textColor, screen, 250, 300)
+
 
             back_button = self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
 
@@ -745,19 +756,19 @@ class Wordle:
                     self.exit_screen()
 
                 if event.type == MOUSEBUTTONDOWN:
-                    if name_box.collidepoint(event.pos):
-                        click1 = True
-                    else:
-                        click1 = False
-                    if password_box.collidepoint(event.pos):
-                        click2 = True
-                    else:
-                        click2 = False
+                    # if name_box.collidepoint(event.pos):
+                    #     click1 = True
+                    # else:
+                    #     click1 = False
+                    # if password_box.collidepoint(event.pos):
+                    #     click2 = True
+                    # else:
+                    #     click2 = False
                     if back_button.collidepoint((mx, my)):
                         running = False
-                    if enter_button.collidepoint((mx, my)):
-                        error_message = ''
-                        error_message  = self.check_login(username, password,screen)
+                    # if enter_button.collidepoint((mx, my)):
+                    #     error_message = ''
+                    #     error_message  = self.check_login(username, password,screen)
 
                 if event.type == pygame.KEYDOWN:
                     if click1 == True:

@@ -1,8 +1,1 @@
-{
-    "john": {
-        "password": "password",
-        "numGames": 0,
-        "PercWin": 0,
-        "GuessDist": 0
-    }
-}
+{"john": {"password": "password", "numGames": 1, "PercWin": 0, "GuessDist": 0}}
