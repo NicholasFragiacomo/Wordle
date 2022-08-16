@@ -173,7 +173,14 @@ class Wordle:
             return 'ERROR: You forgot password'
         if username and password != '':
             if username not in self.DB:
-                self.DB[username] = {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
+                self.DB[username] = {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+            "6": 0
+        }}
                 with open("DB.json", 'w') as data:
                     json.dump(self.DB, data)
                     data.close()
@@ -200,19 +207,19 @@ class Wordle:
         
         for i in guess_letters1:
             if i == word_letters[num]:
-                print('green')
+                #print('green')
                 #self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
                 colors.append((0,255,0))
                 dis+=55
 
             if i in word_letters:
                 if i != word_letters[num]:
-                    print('yellow')
+                    #print('yellow')
                     colors.append((255,255,0))
                     #self.draw_colorBox(x+dis,y,45,45,screen,(255,0,255))
                     dis += 55
             if i not in word_letters:
-                print('grey')
+                #print('grey')
                 colors.append((220,220,220))
                 #self.draw_colorBox(x+dis,y,45,45,screen,(220,220,220))
                 dis += 55
@@ -429,6 +436,8 @@ class Wordle:
         guessed_words = []
         word = random.choice(words.WORDS)
         print(word)
+        wins = 0
+        loses = 0
         while running:
 
             guess_letters = []
@@ -527,6 +536,7 @@ class Wordle:
                     elif event.key == pygame.K_RETURN:
                         if win == True:
                             self.DB[username]['numGames']+=1
+                            wins += 1
                             with open("DB.json", 'w') as data:
                                 json.dump(self.DB, data)
                                 data.close()
@@ -549,7 +559,10 @@ class Wordle:
                                         else:
                                             R1_colors = self.check_guess(word,guess_1,screen)
                                             guessed_words.append(guess_1)
-                                            
+                                            self.DB[username]['GuessDist']["1"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
 
                                     else:
@@ -571,6 +584,10 @@ class Wordle:
                                         else:
                                             R2_colors = self.check_guess(word,guess_2,screen)
                                             guessed_words.append(guess_2)
+                                            self.DB[username]['GuessDist']["2"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
                                     else:
                                         error_message = ''
@@ -590,6 +607,10 @@ class Wordle:
                                         else:
                                             R3_colors = self.check_guess(word,guess_3,screen)
                                             guessed_words.append(guess_3)
+                                            self.DB[username]['GuessDist']["3"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
                                     else:
                                         error_message = ''
@@ -610,6 +631,10 @@ class Wordle:
                                         else:
                                             R4_colors = self.check_guess(word,guess_4,screen)
                                             guessed_words.append(guess_4)
+                                            self.DB[username]['GuessDist']["4"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
                                     else:
                                         error_message = ''
@@ -630,6 +655,10 @@ class Wordle:
                                         else:
                                             R5_colors = self.check_guess(word,guess_5,screen)
                                             guessed_words.append(guess_5)
+                                            self.DB[username]['GuessDist']["5"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
                                     else:
                                         error_message = ''
@@ -650,6 +679,10 @@ class Wordle:
                                         else:
                                             R6_colors = self.check_guess(word,guess_6,screen)
                                             guessed_words.append(guess_6)
+                                            self.DB[username]['GuessDist']["6"] +=1
+                                            with open("DB.json", 'w') as data:
+                                                json.dump(self.DB, data)
+                                                data.close()
                                             win = True
                                                 
                                     else:
@@ -742,9 +775,17 @@ class Wordle:
                 self.DB = json.loads(data)
             
             
-            self.draw_text(f"Number of Games: {self.DB[username]['numGames']}", text_font,self.textColor, screen, 250, 400)
-            self.draw_text(f"Guess Distrabution: {self.DB[username]['GuessDist']}%", text_font,self.textColor, screen, 250, 250)
-            self.draw_text(f"Percentage win: {self.DB[username]['PercWin']}", text_font,self.textColor, screen, 250, 300)
+            self.draw_text(f"Number of Games: {self.DB[username]['numGames']}", text_font,self.textColor, screen, 250, 175)
+            
+            self.draw_text(f"Guess Distrabution:", text_font,self.textColor, screen, 250, 225)
+            yp=250
+            for key,value in self.DB[username]['GuessDist'].items():
+                self.draw_text(f" {key} : {value}", text_font,self.textColor, screen, 250, yp)
+                #self.draw_text(f" {self.DB[username]['GuessDist']}", text_font,self.textColor, screen, xp, 250)
+                yp+=20
+            
+            self.draw_text(f"Percentage win: {self.DB[username]['PercWin']}%", text_font,self.textColor, screen, 250, 400)
+
 
 
             back_button = self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)

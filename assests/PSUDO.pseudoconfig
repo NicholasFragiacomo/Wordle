@@ -81,17 +81,13 @@ BEGIN Register
 
                 SET User EQUAL TO Username,passowrd {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
 
-                with open("DB.json", 'w') as data:
-
-                    json.dump(self.DB, data)
-
-                    data.close()
-
-                    self.login_screen(screen)
+            END IF
 
             ELSE:
 
                 RETURN 'Username taken'
+            
+            END ELSE
 
 
     IF Back pressed
@@ -103,12 +99,8 @@ END Register
 
 BEGIN Wordle
 
-    WHILE Gameover is not True
-        
-        IF Enter pressed
-            IF Guess EQUALS 5 letters
-		
-    ENDWHILE
+    FOR Letter IN Guess
+        IF Letter EQUAL TO word Letter
 
 END Wordle
 
