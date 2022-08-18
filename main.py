@@ -173,7 +173,7 @@ class Wordle:
             return 'ERROR: You forgot password'
         if username and password != '':
             if username not in self.DB:
-                self.DB[username] = {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": {
+                self.DB[username] = {"password": password,"numGames": 0,"numWins":0, "GuessDist": {
             "1": 0,
             "2": 0,
             "3": 0,
@@ -457,7 +457,9 @@ class Wordle:
             self.draw_text(lose_message,header_font,(255,0,0),screen,25,450)
 
 
-
+            with open("DB.json",'r') as DB:
+                data = DB.read()
+                self.DB = json.loads(data)
 
 
             
@@ -536,6 +538,7 @@ class Wordle:
                     elif event.key == pygame.K_RETURN:
                         if win == True:
                             self.DB[username]['numGames']+=1
+                            self.DB[username]['numWins'] += 1
                             wins += 1
                             with open("DB.json", 'w') as data:
                                 json.dump(self.DB, data)
@@ -784,7 +787,7 @@ class Wordle:
                 #self.draw_text(f" {self.DB[username]['GuessDist']}", text_font,self.textColor, screen, xp, 250)
                 yp+=20
             
-            self.draw_text(f"Percentage win: {self.DB[username]['PercWin']}%", text_font,self.textColor, screen, 250, 400)
+            self.draw_text(f"Percentage win: {int((self.DB[username]['numWins']/self.DB[username]['numGames'])*100)}%", text_font,self.textColor, screen, 250, 400)
 
 
 
