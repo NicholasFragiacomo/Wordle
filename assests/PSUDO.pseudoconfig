@@ -79,7 +79,7 @@ BEGIN Register
 
             IF username NOT IN DB:
 
-                SET User EQUAL TO Username,passowrd {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
+                SET User EQUAL TO Username,passowrd {"password": password,"numGames": 0, "numWins": 0, "GuessDist": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}}
 
             END IF
 
