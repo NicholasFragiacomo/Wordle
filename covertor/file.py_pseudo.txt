@@ -14,6 +14,8 @@ from pygame.locals IMPORT *
 
 IMPORT json
 
+IMPORT pygame.freetype
+
 
 
 
@@ -37,6 +39,8 @@ DEFINE CLASS Wordle:
         SET self.textColor TO (255, 255, 255)
 
         SET self.DB TO "DB.jsons"
+
+        SET self.Alp TO ['Q','W','E','R','T','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
 
 
 
@@ -96,6 +100,8 @@ DEFINE CLASS Wordle:
 
         SET textobj TO font.render(text, 1, text_color)
 
+
+
         SET width TO max(100, textobj.get_width()+10)
 
         SET INPUTBox TO pygame.Rect(x, y, width, height)
@@ -112,7 +118,171 @@ DEFINE CLASS Wordle:
 
 
 
+    DEFINE FUNCTION draw_guessBox(self, x, y, width, height, screen, INPUTBox_color, text, font, text_color, outline=2):
+
+        SET textobj TO font.render(text, 1, text_color)
+
+        SET INPUTBox TO pygame.Rect(x, y, width, height)
+
+        pygame.draw.rect(screen, (INPUTBox_color), INPUTBox, outline)
+
+        SET textrect TO textobj.get_rect()
+
+        SET textrect.topleft TO (x+15, y+10)
+
+        screen.blit(textobj, textrect)
+
+        RETURN INPUTBox
+
+
+
+    DEFINE FUNCTION draw_keyboard(self,x,y,screen,button_color,text_color,font):
+
+        SET runs TO 0
+
+        SET dx TO x
+
+        SET lines TO 0
+
+        FOR letter IN self.Alp:
+
+
+
+            # changes the line line of the keyboard 
+
+            IF runs > 8:
+
+                SET x TO dx
+
+                SET y TO y + 25
+
+                lines += 1
+
+                SET runs TO 0
+
+            # ensures the last line of the keyboard is even
+
+            IF lines EQUALS 2:
+
+                x += 25
+
+                SET lines TO 0 
+
+            
+
+            SET letter TO self.draw_button(x,y,20,20,screen,button_color,letter,font,text_color)
+
+            runs += 1 
+
+            x += 25
+
+
+
+    DEFINE FUNCTION draw_guessRow(self, x, y, width, height, screen, INPUTBox_color, L1,L2,L3,L4,L5, font, text_color, outline=2):
+
+        SET box1 TO self.draw_guessBox(x, y, width, height, screen, INPUTBox_color, L1,font, text_color)
+
+        SET box2 TO self.draw_guessBox(x+55, y, width, height, screen, INPUTBox_color, L2,font, text_color)
+
+        SET box3 TO self.draw_guessBox(x+110, y, width, height, screen, INPUTBox_color, L3,font, text_color)
+
+        SET box4 TO self.draw_guessBox(x+165, y, width, height, screen, INPUTBox_color, L4,font, text_color)
+
+        SET box5 TO self.draw_guessBox(x+220, y, width, height, screen, INPUTBox_color, L5,font, text_color)
+
+        RETURN box1
+
+
+
+    DEFINE FUNCTION draw_guessTable(self, x, y, width, height, screen, INPUTBox_color, L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30, font, text_color,line, outline=2):
+
+        SET guess_box TO self.draw_guessRow(x, y, width, height, screen, INPUTBox_color, L1,L2,L3,L4,L5,font, text_color)
+
+        SET guess_box2 TO self.draw_guessRow(x, y+55, width, height, screen, INPUTBox_color, L6,L7,L8,L9,L10,font, text_color)
+
+        SET guess_box3 TO self.draw_guessRow(x, y+110, width, height, screen, INPUTBox_color, L11,L12,L13,L14,L15,font, text_color)
+
+        SET guess_box4 TO self.draw_guessRow(x, y+165, width, height, screen, INPUTBox_color, L16,L17,L18,L19,L20,font, text_color)
+
+        SET guess_box5 TO self.draw_guessRow(x, y+220, width, height, screen, INPUTBox_color, L21,L22,L23,L24,L25,font, text_color)
+
+        SET guess_box6 TO self.draw_guessRow(x, y+275, width, height, screen, INPUTBox_color, L26,L27,L28,L29,L30,font, text_color)
+
+        RETURN guess_box,guess_box2,guess_box3,guess_box4,guess_box5,guess_box6
+
+
+
+    DEFINE FUNCTION draw_colorBox(self,x,y,width,height,screen,box_color):
+
+        SET box TO pygame.Rect(x, y, width, height)
+
+        pygame.draw.rect(screen, (box_color), box, 0)
+
+
+
+    DEFINE FUNCTION backspace(self,L1,L2,L3,L4,L5,guess_1):
+
+        SET guess_1 TO guess_1[:-1]
+
+        IF len(guess_1) EQUALS 0:
+
+            SET L1 TO ''
+
+        IF len(guess_1) EQUALS 1:
+
+            SET L2 TO ''
+
+        IF len(guess_1) EQUALS 2:
+
+            SET L3 TO ''
+
+        IF len(guess_1) EQUALS 3:
+
+            SET L4 TO ''
+
+        IF len(guess_1) EQUALS 4:
+
+            SET L5 TO ''
+
+        RETURN L1,L2,L3,L4,L5,guess_1
+
+
+
+    DEFINE FUNCTION write(self,L1,L2,L3,L4,L5,guess_1,guess_letters):
+
+        
+
+        FOR letter IN guess_1:
+
+            guess_letters += letter
+
+        IF len(guess_1) EQUALS 1:
+
+            SET L1 TO guess_letters[0]
+
+        IF len(guess_1) EQUALS 2:
+
+            SET L2 TO guess_letters[1]
+
+        IF len(guess_1) EQUALS 3:
+
+            SET L3 TO guess_letters[2]
+
+        IF len(guess_1) EQUALS 4:
+
+            SET L4 TO guess_letters[3]
+
+        IF len(guess_1) EQUALS 5:
+
+            SET L5 TO guess_letters[4]
+
+        RETURN L1,L2,L3,L4,L5,guess_1,guess_letters
+
+
+
     DEFINE FUNCTION check_login(self, username, password,screen):
+
+
 
         with open("DB.json") as DB:
 
@@ -122,13 +292,15 @@ DEFINE CLASS Wordle:
 
             DB.close()
 
+
+
         IF username EQUALS '':
 
             RETURN 'ERROR: you forgot username'
 
         IF password EQUALS '':
 
-            RETURN 'ERROR: You forgot passowrd'
+            RETURN 'ERROR: You forgot passowrd '
 
         IF username and password != '':
 
@@ -136,9 +308,9 @@ DEFINE CLASS Wordle:
 
                 IF password EQUALS self.DB[username]['password']:
 
-                    self.wordle_screen(screen)
+                    self.wordle_screen(screen,username)
 
-                    # Start the wordle  
+                    # Start the wordle      
 
                 ELSE:
 
@@ -176,7 +348,21 @@ DEFINE CLASS Wordle:
 
             IF username not IN self.DB:
 
-                SET self.DB[username] TO {"password": password,"numGames": 0, "PercWin": 0, "GuessDist": 0}
+                SET self.DB[username] TO {"password": password,"numGames": 0,"numWins":0, "GuessDist": {
+
+            "1": 0,
+
+            "2": 0,
+
+            "3": 0,
+
+            "4": 0,
+
+            "5": 0,
+
+            "6": 0
+
+        }}
 
                 with open("DB.json", 'w') as data:
 
@@ -189,6 +375,86 @@ DEFINE CLASS Wordle:
             ELSE:
 
                 RETURN 'Username taken'
+
+
+
+    DEFINE FUNCTION check_guess(self,word,guess,screen):
+
+        SET word_letters TO []
+
+        guess_letters1 =[]
+
+        SET colors TO []
+
+        SET num TO 0
+
+        SET x,y TO 175,100
+
+        dis=55
+
+
+
+        FOR i IN word:
+
+            word_letters.append(i)
+
+        OUTPUT(f'WORD - {word_letters}')
+
+
+
+        FOR i IN guess:
+
+            guess_letters1.append(i)
+
+        OUTPUT(f'GUESS - {guess_letters1}')
+
+        
+
+        
+
+        FOR i IN guess_letters1:
+
+            IF i EQUALS word_letters[num]:
+
+                #OUTPUT('green')
+
+                #self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
+
+                colors.append((0,255,0))
+
+                dis+=55
+
+
+
+            IF i IN word_letters:
+
+                IF i != word_letters[num]:
+
+                    #OUTPUT('yellow')
+
+                    colors.append((255,255,0))
+
+                    #self.draw_colorBox(x+dis,y,45,45,screen,(255,0,255))
+
+                    dis += 55
+
+            IF i not IN word_letters:
+
+                #OUTPUT('grey')
+
+                colors.append((220,220,220))
+
+                #self.draw_colorBox(x+dis,y,45,45,screen,(220,220,220))
+
+                dis += 55
+
+
+
+            num+=1 
+
+
+
+        RETURN colors
 
 
 
@@ -223,6 +489,8 @@ DEFINE CLASS Wordle:
             screen.fill(self.backgroundColor)
 
             self.draw_text('Wordle', font, self.textColor, screen, 250, 40)
+
+
 
 
 
@@ -280,6 +548,10 @@ DEFINE CLASS Wordle:
 
         SET error_message TO ''
 
+        SET lose_message TO ''
+
+
+
         SET click1 TO False
 
         SET click2 TO False
@@ -307,6 +579,12 @@ DEFINE CLASS Wordle:
 
 
             self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+
+
+
+            
+
+   
 
 
 
@@ -423,6 +701,8 @@ DEFINE CLASS Wordle:
         SET password TO ''
 
         SET error_message TO ''
+
+
 
         SET click1 TO False
 
@@ -560,139 +840,837 @@ DEFINE CLASS Wordle:
 
 
 
-        DEFINE FUNCTION wordle_screen(self):
+    DEFINE FUNCTION wordle_screen(self,screen,username):
 
-            SET username TO ''
+        SET error_message TO ''
 
-            SET password TO ''
+        SET win_message TO ''
 
-            SET error_message TO ''
+        SET lose_message TO ''
 
-            SET click1 TO False
+        SET guess_1,guess_2,guess_3,guess_4,guess_5,guess_6 TO '','','','','',''
 
-            SET click2 TO False
+        SET L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30 TO '','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''
 
-            SET running TO True
+        SET letters TO [L1,L2,L3,L4,L5,L6,L7,L8,L9,L10]
 
-            WHILE running:
+        SET click1 TO False
 
+        SET click2 TO False
 
+        SET running TO True
 
-                SET header_font TO pygame.font.SysFont(None, 50)
+        SET win TO False
 
-                SET text_font TO pygame.font.SysFont(None, 30)
+        SET lose TO False
 
-                SET INPUT_font TO pygame.font.SysFont(None, 20)
+        SET R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors TO [],[],[],[],[],[]
 
-                SET mx, my TO pygame.mouse.get_pos()
+        SET line TO 1
 
+        SET guessed_words TO []
 
+        SET word TO random.choice(words.WORDS)
 
-                screen.fill(self.backgroundColor)
+        OUTPUT(word)
 
-                self.draw_text('Wordle', header_font,self.textColor, screen, 20, 20)
+        SET wins TO 0
 
+        SET loses TO 0
 
-
-                self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
-
-
-
-                self.draw_text("Guess", text_font,self.textColor, screen, 250, 300)
-
-                SET guess_box TO self.draw_INPUTBox(250, 330, 100, 25, screen, (255, 255, 255), username, INPUT_font, self.textColor, 2)
+        WHILE running:
 
 
 
-                
+            SET guess_letters TO []
 
-                SET enter_button TO self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
-
-
-
-                SET back_button TO self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
+            
 
 
 
-                # Events
+            SET header_font TO pygame.font.SysFont(None, 50)
 
-                FOR event IN pygame.event.get():
+            SET text_font TO pygame.font.SysFont(None, 30)
 
+            SET INPUT_font TO pygame.font.SysFont(None, 20)
 
-
-                    IF event.type EQUALS pygame.QUIT:
-
-                        self.exit_screen()
+            SET mx, my TO pygame.mouse.get_pos()
 
 
 
-                    IF event.type EQUALS MOUSEBUTTONDOWN:
+            screen.fill(self.backgroundColor)
 
-                        IF guess_box.collidepoint(event.pos):
+            self.draw_text('Wordle', header_font,self.textColor, screen, 20, 20)
 
-                            SET click1 TO True
+            
+
+
+
+            self.draw_text(error_message,text_font,(255,0,0),screen,200,475)
+
+            self.draw_text(win_message,header_font,(0,250,0),screen,25,450)
+
+            self.draw_text(lose_message,header_font,(255,0,0),screen,25,450)
+
+
+
+
+
+            with open("DB.json",'r') as DB:
+
+                SET data TO DB.read()
+
+                SET self.DB TO json.loads(data)
+
+
+
+
+
+            
+
+            SET x,y TO 175,105
+
+            FOR i IN R1_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+            y+=55
+
+            x= 175
+
+            FOR i IN R2_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+            y+=55
+
+            x= 175
+
+            FOR i IN R3_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+            y+=55
+
+            x= 175
+
+            FOR i IN R4_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+            y+=55
+
+            x= 175
+
+            FOR i IN R5_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+            y+=55
+
+            x= 175
+
+            FOR i IN R6_colors:
+
+                self.draw_colorBox(x,y,45,45,screen,i)
+
+                x+=55
+
+
+
+
+
+            SET guess_tabel TO self.draw_guessTable(175, 100, 50, 50, screen, (250,0,0), L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,L13,L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27,L28,L29,L30,header_font, self.textColor,line,outline =2)
+
+
+
+            self.draw_keyboard(200,500,screen, (255,0,0), self.textColor,INPUT_font)
+
+
+
+            
+
+            SET enter_button TO self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
+
+
+
+            SET back_button TO self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
+
+
+
+            SET stats_button TO self.draw_button(250, 600, 100, 50, screen, (255, 0, 0), 'stats', text_font, self.textColor)
+
+            # Events
+
+            FOR event IN pygame.event.get():
+
+
+
+                IF event.type EQUALS pygame.QUIT:
+
+                    self.exit_screen()
+
+
+
+                IF event.type EQUALS MOUSEBUTTONDOWN:
+
+                    IF back_button.collidepoint((mx, my)):
+
+                        SET running TO False
+
+                    # IF enter_button.collidepoint((mx, my)):
+
+                    SET #     error_message TO ''
+
+                    IF stats_button.collidepoint((mx, my)):
+
+                        self.stats_screen(screen,username)
+
+
+
+
+
+                IF event.type EQUALS pygame.KEYDOWN:
+
+                    #if click1 EQUALS True:
+
+                    IF event.key EQUALS pygame.K_BACKSPACE:
+
+                        IF line EQUALS 1:
+
+                            SET L1,L2,L3,L4,L5,guess_1 TO self.backspace(L1,L2,L3,L4,L5,guess_1)
+
+                        IF line EQUALS 2:
+
+                            SET L6,L7,L8,L9,L10,guess_2 TO self.backspace(L6,L7,L8,L9,L10,guess_2)
+
+                        IF line EQUALS 3:
+
+                            SET L11,L12,L13,L14,L15,guess_3 TO self.backspace(L11,L12,L13,L14,L15,guess_3)
+
+                        IF line EQUALS 4:
+
+                            SET L16,L17,L18,L19,L20,guess_4 TO self.backspace(L16,L17,L18,L19,L20,guess_4)
+
+                        IF line EQUALS 5:
+
+                            SET L21,L22,L23,L24,L25,guess_5 TO self.backspace(L21,L22,L23,L24,L25,guess_5)
+
+                        IF line EQUALS 6:
+
+                            SET L26,L27,L28,L29,L30,guess_6 TO self.backspace(L26,L27,L28,L29,L30,guess_6)
+
+
+
+                    ELSEIF event.key EQUALS pygame.K_RETURN:
+
+                        IF win EQUALS True:
+
+                            self.DB[username]['numGames']+=1
+
+                            self.DB[username]['numWins'] += 1
+
+                            wins += 1
+
+                            with open("DB.json", 'w') as data:
+
+                                json.dump(self.DB, data)
+
+                                data.close()
+
+                            self.wordle_screen(screen,username)
+
+                        IF lose EQUALS True:
+
+                            self.DB[username]['numGames']+=1
+
+                            with open("DB.json", 'w') as data:
+
+                                json.dump(self.DB, data)
+
+                                data.close()
+
+                            self.wordle_screen(screen,username)
+
+                        
+
+                        IF line ==1:
+
+                            IF len(guess_1) EQUALS 5:
+
+                                IF guess_1 IN words.WORDS:
+
+                                    IF guess_1 not IN guessed_words:
+
+                                        IF guess_1 != word:
+
+                                            SET R1_colors TO self.check_guess(word,guess_1,screen)
+
+                                            guessed_words.append(guess_1)
+
+                                            line += 1
+
+                                        ELSE:
+
+                                            SET R1_colors TO self.check_guess(word,guess_1,screen)
+
+                                            guessed_words.append(guess_1)
+
+                                            self.DB[username]['GuessDist']["1"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+                                    
+
+                        IF line ==2:
+
+                            IF len(guess_2) EQUALS 5:
+
+                                IF guess_2 IN words.WORDS:
+
+                                    IF guess_2 not IN guessed_words:
+
+                                        IF guess_2 != word:
+
+                                            SET R2_colors TO self.check_guess(word,guess_2,screen)
+
+                                            guessed_words.append(guess_2)
+
+                                            line += 1
+
+                                        ELSE:
+
+                                            SET R2_colors TO self.check_guess(word,guess_2,screen)
+
+                                            guessed_words.append(guess_2)
+
+                                            self.DB[username]['GuessDist']["2"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+                        IF line ==3:
+
+                            IF len(guess_3) EQUALS 5:
+
+                                IF guess_3 IN words.WORDS:
+
+                                    IF guess_3 not IN guessed_words:
+
+                                        IF guess_3 != word:
+
+                                            SET R3_colors TO self.check_guess(word,guess_3,screen)
+
+                                            guessed_words.append(guess_3)
+
+                                            line += 1
+
+                                        ELSE:
+
+                                            SET R3_colors TO self.check_guess(word,guess_3,screen)
+
+                                            guessed_words.append(guess_3)
+
+                                            self.DB[username]['GuessDist']["3"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+
+
+                        IF line ==4:
+
+                            IF len(guess_4) EQUALS 5:
+
+                                IF guess_4 IN words.WORDS:
+
+                                    IF guess_4 not IN guessed_words:
+
+                                        IF guess_4 != word:
+
+                                            SET R4_colors TO self.check_guess(word,guess_4,screen)
+
+                                            guessed_words.append(guess_4)
+
+                                            line += 1
+
+                                        ELSE:
+
+                                            SET R4_colors TO self.check_guess(word,guess_4,screen)
+
+                                            guessed_words.append(guess_4)
+
+                                            self.DB[username]['GuessDist']["4"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+
+
+                        IF line ==5:
+
+                            IF len(guess_5) EQUALS 5:
+
+                                IF guess_5 IN words.WORDS:
+
+                                    IF guess_5 not IN guessed_words:
+
+                                        IF guess_5 != word:
+
+                                            SET R5_colors TO self.check_guess(word,guess_5,screen)
+
+                                            guessed_words.append(guess_5)
+
+                                            line += 1
+
+                                        ELSE:
+
+                                            SET R5_colors TO self.check_guess(word,guess_5,screen)
+
+                                            guessed_words.append(guess_5)
+
+                                            self.DB[username]['GuessDist']["5"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+                        IF line ==6:
+
+                            IF len(guess_6) EQUALS 5:
+
+                                IF guess_6 IN words.WORDS:
+
+                                    IF guess_6 not IN guessed_words:
+
+                                        IF guess_6 != word:
+
+                                            SET R6_colors TO self.check_guess(word,guess_6,screen)
+
+                                            guessed_words.append(guess_6)
+
+                                            SET lose_message TO 'Unlcuky - press enter to play again'
+
+                                            SET lose TO True
+
+                                        ELSE:
+
+                                            SET R6_colors TO self.check_guess(word,guess_6,screen)
+
+                                            guessed_words.append(guess_6)
+
+                                            self.DB[username]['GuessDist']["6"] +=1
+
+                                            with open("DB.json", 'w') as data:
+
+                                                json.dump(self.DB, data)
+
+                                                data.close()
+
+                                            SET win TO True
+
+                                                
+
+                                    ELSE:
+
+                                        SET error_message TO ''
+
+                                        SET error_message TO 'Cant guess that again'
+
+                                ELSE:
+
+                                    
+
+                                    SET error_message TO ''
+
+                                    SET error_message TO 'Thats not a word'
+
+                                
+
+                    ELSE:
+
+                        IF line EQUALS 1:
+
+                            IF len(guess_1) != 5:
+
+                                guess_1 += event.unicode
+
+                                SET L1,L2,L3,L4,L5,guess_1,guess_letters TO self.write(L1,L2,L3,L4,L5,guess_1,guess_letters)
+
+                        IF line EQUALS 2:
+
+                            IF len(guess_2) != 5:
+
+                                guess_2 += event.unicode
+
+                                SET L6,L7,L8,L9,L10,guess_2,guess_letters TO self.write(L6,L7,L8,L9,L10,guess_2,guess_letters)
+
+                        IF line EQUALS 3:
+
+                            IF len(guess_3) != 5:
+
+                                guess_3 += event.unicode
+
+                                SET L11,L12,L13,L14,L15,guess_3,guess_letters TO self.write(L11,L12,L13,L14,L15,guess_3,guess_letters)
+
+                        IF line EQUALS 4:
+
+                            IF len(guess_4) != 5:
+
+                                guess_4 += event.unicode
+
+                                SET L16,L17,L18,L19,L20,guess_4,guess_letters TO self.write(L16,L17,L18,L19,L20,guess_4,guess_letters)
+
+                        IF line EQUALS 5:
+
+                            IF len(guess_5) != 5:
+
+                                guess_5 += event.unicode
+
+                                SET L21,L22,L23,L24,L25,guess_5,guess_letters TO self.write(L21,L22,L23,L24,L25,guess_5,guess_letters)
+
+                        IF line EQUALS 6:
+
+                            IF len(guess_6) != 5:
+
+                                guess_6 += event.unicode
+
+                                SET L26,L27,L28,L29,L30,guess_6,guess_letters TO self.write(L26,L27,L28,L29,L30,guess_6,guess_letters)
+
+                                
+
+
+
+                    IF click2 EQUALS True:
+
+                        IF event.key EQUALS pygame.K_BACKSPACE:
+
+                            SET password TO password[:-1]
+
+                        ELSEIF event.key EQUALS pygame.K_RETURN:
+
+                            SET password TO password
 
                         ELSE:
 
-                            SET click1 TO False
+                            password += event.unicode
 
-                        IF back_button.collidepoint((mx, my)):
+                    # IF event.key EQUALS pygame.K_RETURN:
 
-                            SET running TO False
-
-                        IF enter_button.collidepoint((mx, my)):
-
-                            SET error_message TO ''
-
-                            #check guess
-
-                            SET #error_message  TO self.check_login(username, password,screen)
+                    SET #     error_message TO ''
 
 
 
-                    IF event.type EQUALS pygame.KEYDOWN:
+                    IF win EQUALS True:
 
-                        IF click1 EQUALS True:
+                        SET error_message TO ''
 
-                            IF event.key EQUALS pygame.K_BACKSPACE:
+                        SET win_message TO 'You Won - Press Enter to play again'
 
-                                SET username TO username[:-1]
-
-                            ELSEIF event.key EQUALS pygame.K_RETURN:
-
-                                SET username TO username  
-
-                            ELSE:
-
-                                username += event.unicode
-
-                        IF click2 EQUALS True:
-
-                            IF event.key EQUALS pygame.K_BACKSPACE:
-
-                                SET password TO password[:-1]
-
-                            ELSEIF event.key EQUALS pygame.K_RETURN:
-
-                                SET password TO password
-
-                            ELSE:
-
-                                password += event.unicode
-
-                        IF event.key EQUALS pygame.K_RETURN:
-
-                            SET error_message TO ''
-
-                            #check guess
-
-                            SET #error_message TO self.check_login(username, password,screen)
+                        
 
 
 
-                pygame.display.update()
 
-                mainClock.tick(60)
+
+            pygame.display.update()
+
+            mainClock.tick(60)
+
+        
+
+    DEFINE FUNCTION stats_screen(self, screen,username):
+
+        SET password TO ''
+
+        SET error_message TO ''
+
+        SET lose_message TO ''
+
+
+
+        SET click1 TO False
+
+        SET click2 TO False
+
+        SET running TO True
+
+        WHILE running:
+
+
+
+            SET header_font TO pygame.font.SysFont(None, 50)
+
+            SET text_font TO pygame.font.SysFont(None, 30)
+
+            SET INPUT_font TO pygame.font.SysFont(None, 20)
+
+            SET mx, my TO pygame.mouse.get_pos()
+
+
+
+            screen.fill(self.backgroundColor)
+
+            self.draw_text('stats', header_font,self.textColor, screen, 20, 20)
+
+
+
+            self.draw_text(error_message,text_font,(255,0,0),screen,200,200)
+
+
+
+            
+
+   
+
+
+
+            # self.draw_text("Username:", text_font,self.textColor, screen, 250, 300)
+
+            SET # name_box TO self.draw_INPUTBox(250, 330, 100, 25, screen, (255, 255, 255), username, INPUT_font, self.textColor, 2)
+
+
+
+            # self.draw_text("Password:", text_font,self.textColor, screen, 250, 400)
+
+            SET # password_box TO self.draw_INPUTBox(250, 430, 100, 25, screen, (255, 255, 255), password, INPUT_font, self.textColor, 2)
+
+
+
+            SET # enter_button TO self.draw_button(250, 700, 100, 50, screen, (255, 0, 0), 'Enter', text_font, self.textColor)
+
+
+
+            with open("DB.json",'r') as DB:
+
+                SET data TO DB.read()
+
+                SET self.DB TO json.loads(data)
+
+            
+
+            
+
+            self.draw_text(f"Number of Games: {self.DB[username]['numGames']}", text_font,self.textColor, screen, 250, 175)
+
+            
+
+            self.draw_text(f"Guess Distrabution:", text_font,self.textColor, screen, 250, 225)
+
+            yp=250
+
+            FOR key,value IN self.DB[username]['GuessDist'].items():
+
+                self.draw_text(f" {key} : {value}", text_font,self.textColor, screen, 250, yp)
+
+                #self.draw_text(f" {self.DB[username]['GuessDist']}", text_font,self.textColor, screen, xp, 250)
+
+                yp+=20
+
+            
+
+            self.draw_text(f"Percentage win: {int((self.DB[username]['numWins']/self.DB[username]['numGames'])*100)}%", text_font,self.textColor, screen, 250, 400)
+
+
+
+
+
+
+
+            SET back_button TO self.draw_button(250, 800, 100, 50, screen, (255, 0, 0), 'Back', text_font, self.textColor)
+
+
+
+            # Events
+
+            FOR event IN pygame.event.get():
+
+
+
+                IF event.type EQUALS pygame.QUIT:
+
+                    self.exit_screen()
+
+
+
+                IF event.type EQUALS MOUSEBUTTONDOWN:
+
+                    # IF name_box.collidepoint(event.pos):
+
+                    SET #     click1 TO True
+
+                    # ELSE:
+
+                    SET #     click1 TO False
+
+                    # IF password_box.collidepoint(event.pos):
+
+                    SET #     click2 TO True
+
+                    # ELSE:
+
+                    SET #     click2 TO False
+
+                    IF back_button.collidepoint((mx, my)):
+
+                        SET running TO False
+
+                    # IF enter_button.collidepoint((mx, my)):
+
+                    SET #     error_message TO ''
+
+                    SET #     error_message  TO self.check_login(username, password,screen)
+
+
+
+                IF event.type EQUALS pygame.KEYDOWN:
+
+                    IF click1 EQUALS True:
+
+                        IF event.key EQUALS pygame.K_BACKSPACE:
+
+                            SET username TO username[:-1]
+
+                        ELSEIF event.key EQUALS pygame.K_RETURN:
+
+                            SET username TO username  
+
+                        ELSE:
+
+                            username += event.unicode
+
+                    IF click2 EQUALS True:
+
+                        IF event.key EQUALS pygame.K_BACKSPACE:
+
+                            SET password TO password[:-1]
+
+                        ELSEIF event.key EQUALS pygame.K_RETURN:
+
+                            SET password TO password
+
+                        ELSE:
+
+                            password += event.unicode
+
+                    IF event.key EQUALS pygame.K_RETURN:
+
+                        SET error_message TO ''
+
+                        SET error_message TO self.check_login(username, password,screen)
+
+
+
+            pygame.display.update()
+
+            mainClock.tick(60)
 
 
 
@@ -739,4 +1717,3 @@ DEFINE FUNCTION main():
 IF __name__ EQUALS "__main__":
 
     main()
-

@@ -97,13 +97,253 @@ BEGIN Register
 
 END Register
 
-BEGIN Wordle
+BEGIN Check Guess
 
     FOR Letter IN Guess
-        IF Letter EQUAL TO word Letter
+
+        IF Letter EQUAL TO Letter IN word
+
+            DRAW green box
+
+        END IF
+
+        IF Letter IN word
+
+            If Letter IS NOT EQUAL TO Letter IN word
+
+                DRAW yellow box
+            
+            END IF
+
+        END IF
+
+        IF Letter IS NOT IN word
+
+            DRAW grey box
+
+        END IF
+
+    END FOR
 
 END Wordle
 
+BEGIN Wordle
+
+    IF Enter pressed THEN
+
+        IF win EQUALS True
+
+            ADD 1 TO Number of Games
+
+            ADD 1 TO Number of Wins
+
+            CALL Wordle
+
+        END IF
+
+        IF lose EQUALS True
+
+            ADD 1 TO Number of Games
+
+            CALL Wordle
+
+        END IF
+
+        
+
+        IF line EQUALS 1
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE:
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO First Guess Distrabution 
+
+                        END ELSE
+
+                            SET win TO True
+    IF line EQUALS 2
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO Second Guess Distrabution 
+
+
+                            SET win TO True
+
+                        ELSE END
+
+                    END IF
+
+                    ELSE
+
+                        DISPLAY 'Cant guess that again'
+
+                    ELSE END
+
+                ELSE
+
+                DISPLAY 'Thats not a word'
+
+                ELSE END
+
+            END IF
+
+    END IF
+
+    IF line EQUALS 3
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE:
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO Third Guess Distrabution 
+
+
+                            SET win TO True
+    
+    IF line EQUALS 4
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE:
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO Forth Guess Distrabution 
+
+
+                            SET win TO True
+
+    IF line EQUALS 5
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE:
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO Fifth Guess Distrabution 
+
+
+                            SET win TO True
+
+    IF line EQUALS 6
+
+            IF length OF guess EQUALS 5
+
+                IF guess IN words
+
+                    IF guess NOT IN guessed words
+
+                        IF guess NOT EQUAL TO word
+
+                            CALL check guess
+
+                            ADD guess TO checked guesses
+
+                            ADD 1 TO line
+                        
+                        END IF
+
+                        ELSE:
+
+                            CALL check guess
+
+                            ADD guess TO checked Guesses
+
+                            ADD 1 TO Sixth Guess Distrabution 
+
+
+                            SET win TO True
 BEGIN Exit
 
     Close Program
