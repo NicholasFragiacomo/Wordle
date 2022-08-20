@@ -1,1 +1,1 @@
-{"john": {"password": "password", "numGames": 107, "numWins": 56, "GuessDist": {"1": 7, "2": 2, "3": 0, "4": 0, "5": 0, "6": 0}}}
+{"john": {"password": "password", "numGames": 108, "numWins": 57, "GuessDist": {"1": 7, "2": 2, "3": 1, "4": 0, "5": 0, "6": 0}}, "leon": {"password": "leonsick", "numGames": 2, "numWins": 2, "GuessDist": {"1": 1, "2": 1, "3": 0, "4": 0, "5": 0, "6": 0}}}

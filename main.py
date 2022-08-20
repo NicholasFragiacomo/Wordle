@@ -2,7 +2,6 @@ from tkinter import font
 import pygame
 import sys
 import random
-from player import Player
 import words
 from pygame.locals import *
 import json
@@ -209,18 +208,18 @@ class Wordle:
             if i == word_letters[num]:
                 #print('green')
                 #self.draw_colorBox(x+dis,y,45,45,screen,(0,255,0))
-                colors.append((0,255,0))
+                colors.append((0,200,0))
                 dis+=55
 
             if i in word_letters:
                 if i != word_letters[num]:
                     #print('yellow')
-                    colors.append((255,255,0))
+                    colors.append((200,200,0))
                     #self.draw_colorBox(x+dis,y,45,45,screen,(255,0,255))
                     dis += 55
             if i not in word_letters:
                 #print('grey')
-                colors.append((220,220,220))
+                colors.append((200,200,200))
                 #self.draw_colorBox(x+dis,y,45,45,screen,(220,220,220))
                 dis += 55
 
@@ -787,7 +786,10 @@ class Wordle:
                 #self.draw_text(f" {self.DB[username]['GuessDist']}", text_font,self.textColor, screen, xp, 250)
                 yp+=20
             
-            self.draw_text(f"Percentage win: {int((self.DB[username]['numWins']/self.DB[username]['numGames'])*100)}%", text_font,self.textColor, screen, 250, 400)
+            if self.DB[username]['numGames'] == 0:
+                self.draw_text(f"Percentage win: {'0'}%", text_font,self.textColor, screen, 250, 400)
+            else:
+                self.draw_text(f"Percentage win: {int((self.DB[username]['numWins']/self.DB[username]['numGames'])*100)}%", text_font,self.textColor, screen, 250, 400)
 
 
 
