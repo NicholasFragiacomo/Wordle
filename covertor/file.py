@@ -2,7 +2,6 @@ from tkinter import font
 import pygame
 import sys
 import random
-from player import Player
 import words
 from pygame.locals import *
 import json
@@ -434,7 +433,13 @@ class Wordle:
         R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors = [],[],[],[],[],[]
         line = 1
         guessed_words = []
-        word = random.choice(words.WORDS)
+        with open("GW.json",'r') as DB:
+                data = DB.read()
+                self.GW = json.loads(data)
+        while word not in self.GW:
+            word = random.choice(words.WORDS)
+        
+        
         print(word)
         wins = 0
         loses = 0

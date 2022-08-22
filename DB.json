@@ -1,16 +1,1 @@
-
-{
-    "john": {
-        "password": "password",
-        "numGames": 20,
-        "numWins": 9,
-        "GuessDist": {
-            "1": 7,
-            "2": 2,
-            "3": 0,
-            "4": 0,
-            "5": 0,
-            "6": 0
-        }
-    }
-}
+{"john": {"password": "password", "numGames": 22, "numWins": 11, "GuessDist": {"1": 8, "2": 3, "3": 0, "4": 1, "5": 0, "6": 0}}}

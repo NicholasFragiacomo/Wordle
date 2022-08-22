@@ -2,11 +2,20 @@ BEGIN Start
 
     Show Start screen
     IF Login button pressed
+
         CALL Login
+
+    END IF
     IF Register button pressed
+
         CALL Register
+    END IF
+
     IF Exit button pressed
+
         CALL Exit
+    
+    END IF
 
 END Start
     
@@ -39,7 +48,7 @@ BEGIN Login
 
                 ELSE
 
-                    DISPLAY 'password dont match what we got'
+                    DISPLAY 'ERROR: password is incorrect'
                 
                 END ELSE
 
@@ -47,7 +56,7 @@ BEGIN Login
 
             ELSE
 
-                RETURN 'That username aint real'
+                RETURN 'ERROR: That username dose not exist'
             
             END ELSE
 
@@ -79,21 +88,25 @@ BEGIN Register
 
             IF username NOT IN DB:
 
-                SET User EQUAL TO Username,passowrd {"password": password,"numGames": 0, "numWins": 0, "GuessDist": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}}
+                SET User EQUAL TO Username,password {"password": password,"numGames": 0, "numWins": 0, "GuessDist": {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}}
 
             END IF
 
             ELSE:
 
-                RETURN 'Username taken'
+                RETURN 'ERROR: Username taken'
             
             END ELSE
+
+        END IF
 
 
     IF Back pressed
         CALL Start
+    END IF
     IF Exit pressed
         CALL Exit
+    END IF
 
 END Register
 

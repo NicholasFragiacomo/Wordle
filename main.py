@@ -19,6 +19,7 @@ class Wordle:
         self.textColor = (255, 255, 255)
         self.DB = "DB.jsons"
         self.Alp = ['Q','W','E','R','T','U','I','O','P','A','S','D','F','G','H','J','K','L','Z','X','C','V','B','N','M']
+        self.GW = "GW.jsons"
 
     '''
     Functions
@@ -155,9 +156,9 @@ class Wordle:
                     self.wordle_screen(screen,username)
                     # Start the wordle      
                 else:
-                    return 'password dont match what we got'
+                    return 'ERROR: password is incorrect'
             else:
-                return 'That username aint real'
+                return 'ERROR: That username dose not exist'
 
     def check_registor(self, username, password,screen):
 
@@ -185,7 +186,7 @@ class Wordle:
                     data.close()
                     self.login_screen(screen)
             else:
-                return 'Username taken'
+                return 'ERROR: Username taken'
 
     def check_guess(self,word,guess,screen):
         word_letters = []
@@ -433,11 +434,24 @@ class Wordle:
         R1_colors,R2_colors,R3_colors,R4_colors,R5_colors,R6_colors = [],[],[],[],[],[]
         line = 1
         guessed_words = []
+        with open("GW.json",'r') as GW:
+                data = GW.read()
+                self.GW= json.loads(data)
         word = random.choice(words.WORDS)
-        print(word)
+        
+
         wins = 0
         loses = 0
         while running:
+            if word not in self.GW["Guessed words"]:
+                word = random.choice(words.WORDS)
+                self.GW["Guessed words"].append(word)
+                print(word)
+                if len(self.GW["Guessed words"]) == 5000:
+                    self.GW["Guessed words"] = []
+                with open("GW.json", 'w') as data:
+                    json.dump(self.GW, data)
+                    data.close()
 
             guess_letters = []
             
