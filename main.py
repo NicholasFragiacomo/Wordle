@@ -691,7 +691,7 @@ class Wordle:
                                             R6_colors = self.check_guess(word,guess_6,screen)
                                             guessed_words.append(guess_6)
                                             error_message = ''
-                                            lose_message = 'Unlucky - press enter to play again'
+                                            lose_message = f'Word: {word} - press enter to restart'
                                             lose = True
                                         else:
                                             R6_colors = self.check_guess(word,guess_6,screen)
